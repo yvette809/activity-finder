@@ -25,9 +25,15 @@ const ReservationSchema = new Schema({
       totalPrice: {
         type: Number,
         required: true,
-      }
+      },
+     bookingDate:{
+        type:Date
+
+     }
      
-})
+},
+{ timestamps: true }
+)
 
 const reservation = models.reservation || model("Reservation", ReservationSchema);
 export default reservation
