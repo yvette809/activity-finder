@@ -36,6 +36,11 @@ const ActivitySchema = new Schema(
       type: Number,
       required: true,
     },
+    status: {
+      type: String,
+      enum: ['available', 'booked', 'cancelled'],
+      default: 'available'
+    },
   },
   { timestamps: true }
 );
