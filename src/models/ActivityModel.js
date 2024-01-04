@@ -41,6 +41,9 @@ const ActivitySchema = new Schema(
       enum: ['available', 'booked', 'cancelled'],
       default: 'available'
     },
+    imageSrc:{
+      type:String
+    }
   },
   { timestamps: true }
 );

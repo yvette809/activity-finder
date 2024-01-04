@@ -2,7 +2,6 @@ import  {Schema, model, models} from "mongoose"
 
 
 const ReservationSchema = new Schema({
-    id:String,
     userId: {
         type: Schema.Types.ObjectId,
         ref: "User",
