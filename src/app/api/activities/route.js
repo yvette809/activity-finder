@@ -30,8 +30,9 @@ export const POST = async (request) => {
         capacity,
         price,
         status,
-        imageSrc
-      } = await req.json();
+        imageSrc,
+        reviews
+      } = await request.json();
 
       const newActivity = new ActivityModel({
         creator: user._id,

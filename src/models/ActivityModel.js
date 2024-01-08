@@ -43,7 +43,11 @@ const ActivitySchema = new Schema(
     },
     imageSrc:{
       type:String
-    }
+    },
+    reviews: [{
+      type: Schema.Types.ObjectId,
+      ref: 'ActivityReview',
+    }]
   },
   { timestamps: true }
 );
