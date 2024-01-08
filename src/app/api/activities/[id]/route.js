@@ -79,6 +79,7 @@ export const DELETE = async (request, { params }) => {
     }
 
     const user = await UserModel.findById(userId);
+    console.log("userId", userId)
 
     const activity = await ActivityModel.findById(params.id);
     if (!activity) {

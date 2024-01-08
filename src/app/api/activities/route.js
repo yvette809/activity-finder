@@ -31,7 +31,6 @@ export const POST = async (request) => {
         price,
         status,
         imageSrc,
-        reviews
       } = await request.json();
 
       const newActivity = new ActivityModel({
@@ -45,11 +44,14 @@ export const POST = async (request) => {
         price,
         status,
         imageSrc
+        
       });
-      await newActivity.populate("creator", "firstName lastName");
+      
+     await newActivity.populate("creator", "firstName lastName");
       await newActivity.save();
 
       console.log("activity", newActivity);
+      
 
       return Response.json({
         newActivity,

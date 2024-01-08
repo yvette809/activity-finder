@@ -23,7 +23,7 @@ const ActivitySchema = new Schema(
       default: new Date(),
     },
     duration: {
-      type: String,
+      type: Number,
       required: true,
     },
 
@@ -38,16 +38,25 @@ const ActivitySchema = new Schema(
     },
     status: {
       type: String,
-      enum: ['available', 'booked', 'cancelled'],
-      default: 'available'
+      enum: ["available", "booked", "cancelled"],
+      default: "available",
     },
-    imageSrc:{
-      type:String
+    imageSrc: {
+      type: String,
     },
-    reviews: [{
-      type: Schema.Types.ObjectId,
-      ref: 'ActivityReview',
-    }]
+    reviews: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Review",
+      },
+    ],
+
+    reservations: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Reservation",
+      },
+    ]
   },
   { timestamps: true }
 );

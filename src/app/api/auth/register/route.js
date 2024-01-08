@@ -3,8 +3,7 @@ import { genSalt, hash } from "bcryptjs";
 import UserModel from "@/models/UserModel";
 import generateToken from "@/utils/token";
 
-export async function POST (request) {
-  const res = Response.next();
+export async function POST(request) {
   try {
     connectToDB();
 
@@ -45,7 +44,7 @@ export async function POST (request) {
     if (user) {
       await user.save();
       generateToken(user._id);
-      console.log("gentk", generateToken( user._id));
+      console.log("gentk", generateToken(user._id));
 
       const updatedUser = {
         _id: user._id,
@@ -53,7 +52,7 @@ export async function POST (request) {
         lastName: user.lastName,
         email: user.email,
         role: user.role,
-        image:user.image,
+        image: user.image,
         specialisation: user.specialisation,
         experience: user.experience,
         availability: user.availability,

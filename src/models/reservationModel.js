@@ -1,38 +1,34 @@
-import  {Schema, model, models} from "mongoose"
+import { Schema, model, models } from "mongoose";
 
-
-const ReservationSchema = new Schema({
+const ReservationSchema = new Schema(
+  {
     userId: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-      },
-      activityId:{
-        type: Schema.Types.ObjectId,
-        ref:"Activity"
-      },
-      numberOfPersons:{
-        type:Number,
-        required:true
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
 
-      },
+    numberOfPersons: {
+      type: Number,
+      required: true,
+    },
 
-      bookingStatus:{
-        type:String,
-        enum:["confirmed", "pending","cancelled"], 
-        default: "pending"
-      },
-      totalPrice: {
-        type: Number,
-        required: true,
-      },
-     bookingDate:{
-        type:Date
+    bookingStatus: {
+      type: String,
+      enum: ["confirmed", "pending", "cancelled"],
+      default: "pending",
+    },
+    totalPrice: {
+      type: Number,
+      required: true,
+    },
+    bookingDate: {
+      type: Date,
+    },
+  },
+  { timestamps: true }
+);
 
-     }
-     
-},
-{ timestamps: true }
-)
+const reservation =
+  models.Reservation || model("Reservation", ReservationSchema);
 
-const reservation = models.reservation || model("Reservation", ReservationSchema);
-export default reservation
+export default reservation;
