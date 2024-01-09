@@ -38,7 +38,7 @@ const ActivitySchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["available", "booked", "cancelled"],
+      enum: ["available", "booked", "reserved","cancelled"],
       default: "available",
     },
     imageSrc: {
@@ -54,9 +54,9 @@ const ActivitySchema = new Schema(
     reservations: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Reservation",
+        ref: "Reservation"
       },
-    ]
+    ],
   },
   { timestamps: true }
 );

@@ -7,7 +7,7 @@ export const POST = async (request, { params }) => {
   try {
     await connectToDB();
     const session = getSession();
-    const userId = session.payload.id;
+    const userId = session?.payload.id;
 
     if (!session) {
       return new Response("Unauthorized", { status: 401 });
@@ -15,25 +15,16 @@ export const POST = async (request, { params }) => {
 
     const body = await request.json();
 
-    const { bookingStatus, bookingDate } = body;
+    const { bookingStatus } = body;
     const numberOfPersons = parseInt(body.numberOfPersons, 10);
     const totalPrice = parseInt(body.totalPrice, 10);
     const activityId = params.id;
-    console.log("activityId", activityId);
 
-    // Validate if parsing was successful
+    // Validate input
     if (isNaN(numberOfPersons) || isNaN(totalPrice)) {
       return new Response("Invalid input for numberOfPersons or totalPrice.", {
         status: 400,
       });
-    }
-
-    // Validate if booking date is in the future
-    if (new Date(bookingDate) < new Date()) {
-      return new Response(
-        "Invalid booking date. Please choose a date in the future.",
-        { status: 400 }
-      );
     }
 
     const activity = await ActivityModel.findById(activityId).populate(
@@ -44,7 +35,8 @@ export const POST = async (request, { params }) => {
       return new Response("Activity not found", { status: 404 });
     }
 
-    if (numberOfPersons > activity.capacity) {
+    const availableCapacity = activity.capacity - activity.reservations.length;
+    if (numberOfPersons > availableCapacity) {
       return new Response(
         "Number of persons greater than required for this activity",
         { status: 400 }
@@ -59,40 +51,15 @@ export const POST = async (request, { params }) => {
     }
 
     if (activity.status === "available") {
-      const newReservation = new ReservationModel({
+      await handleReservation(
+        activity,
         userId,
         numberOfPersons,
         bookingStatus,
-        totalPrice,
-      });
-
-      await newReservation.save();
-      // check if this user has already reserved this activity
-
-      const existingReservation = activity.reservations.find(
-        (reservation) => reservation.userId.toString() === userId.toString()
+        totalPrice
       );
 
-      if (existingReservation) {
-        return new Response("There is already a reservation for this user", {
-          status: 400,
-        });
-      }
-
-      // update activity status to booked
-      // reduce the number of spaces for that activity
-      await ActivityModel.findByIdAndUpdate(activity._id, {
-        $push: { reservations: newReservation },
-        $inc: { capacity: -1 },
-        status: "booked",
-      });
-      // check if activity has already been reserved
-
-    
-
-      console.log("Reservation", newReservation);
-
-      return new Response("Activity reserved", { status: 201 });
+      return new Response("reservation created", { status: 201 });
     } else {
       return new Response(
         "Invalid activity status. The activity is not available for booking.",
@@ -102,5 +69,81 @@ export const POST = async (request, { params }) => {
   } catch (error) {
     console.error(error);
     return new Response("Failed to create a new reservation", { status: 500 });
+  }
+};
+
+const handleReservation = async (
+  activity,
+  userId,
+  numberOfPersons,
+  bookingStatus,
+  totalPrice
+) => {
+  try {
+    // check if this user has already reserved this activity
+    const existingReservation = activity.reservations.find(
+      (reservation) => reservation.userId.toString() === userId.toString()
+    );
+
+    if (existingReservation) {
+      return new Response("There is already a reservation for this user", {
+        status: 400,
+      });
+    }
+
+    const newReservation = new ReservationModel({
+      userId,
+      activityId: activity.id,
+      numberOfPersons,
+      bookingStatus,
+      totalPrice,
+    });
+
+    await newReservation.save();
+    // reduce the number of spaces for that activity
+    activity.capacity -= numberOfPersons;
+
+    // Update the activity status to booked and reduce the number of available spaces
+    await ActivityModel.findByIdAndUpdate(activity.id, {
+      $push: { reservations: newReservation },
+      $inc: { capacity: -numberOfPersons },
+      status: "reserved",
+    });
+
+    return newReservation;
+  } catch (error) {
+    console.error("Error handling reservation:", error);
+    throw new Error("Failed to handle reservation");
+  }
+};
+
+export const GET = async (request, { params }) => {
+  try {
+    await connectToDB();
+    const session = getSession();
+    const userId = session?.payload.id;
+
+    // Check if the user is logged in
+    if (!session) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+
+    const activityId = params.id;
+    // Check if the user is the creator of the activity
+    const activity = await ActivityModel.findById(activityId);
+    if (!activity || activity.creator.toString() !== userId) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+
+    const reservations = await ReservationModel.find({
+      activityId: activityId,
+    })
+      .populate("userId", "firstName lastName")
+      .populate("activityId", "creator typeOfActivity");
+
+    return Response.json(reservations, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };

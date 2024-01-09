@@ -6,6 +6,10 @@ const ReservationSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    activityId: {
+      type: Schema.Types.ObjectId,
+      ref: "Activity",
+    },
 
     numberOfPersons: {
       type: Number,
@@ -21,14 +25,10 @@ const ReservationSchema = new Schema(
       type: Number,
       required: true,
     },
-    bookingDate: {
-      type: Date,
-    },
   },
   { timestamps: true }
 );
 
 const reservation =
   models.Reservation || model("Reservation", ReservationSchema);
-
 export default reservation;

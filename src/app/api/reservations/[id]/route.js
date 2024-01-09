@@ -11,10 +11,16 @@ export const GET = async (request, { params }) => {
     const session = getSession();
     const userId = session?.payload.id;
 
-    const reservation = await ReservationModel.findById(params.id).populate(
+    /*  const reservation = await ReservationModel.findById(params.id).populate(
       "userId",
       "firstName lastName"
-    );
+    ); */
+
+    const reservation = await ReservationModel.findById(params.id)
+      .populate("userId", "firstName lastName")
+      .populate("activityId");
+
+    // Now reservation.userId and reservation.activityId will be fully populated
 
     if (!reservation) {
       return new Response(`Reservation with id ${params.id} not found`, {
@@ -33,7 +39,6 @@ export const GET = async (request, { params }) => {
 
     // Check if the user trying to get the reservation is the person who made it
     const isReservationOwner = reservation.userId._id.toString() === userId;
-  
 
     if (isActivityCreator || isReservationOwner) {
       return Response.json(reservation, { status: 200 });
@@ -103,7 +108,10 @@ export const DELETE = async (request, { params }) => {
       return new Response("Unauthorized", { status: 401 });
     }
 
-    const activity = await ActivityModel.findById(params.id);
+    // Fetch the reservation from the database
+    const reservation = await ReservationModel.findById(params.id);
+
+    const activity = await ActivityModel.findById(reservation.activityId._id);
     if (!activity) {
       return new Response("Activity not found", { status: 404 });
     }
@@ -111,14 +119,11 @@ export const DELETE = async (request, { params }) => {
     // Check if the user trying to delete the reservation is the creator of the activity
     const isActivityCreator = activity.creator === userId;
 
-    // Fetch the reservation from the database
-    const reservation = await ReservationModel.findById(params.id);
-
     // Check if the user trying to delete the reservation is the owner of the reservation
     const isReservationOwner = reservation?.userId?._id.toString() === userId;
 
     if (isActivityCreator || isReservationOwner) {
-      await ReservationModel.findByIdAndRemove(params.id);
+      await ReservationModel.findByIdAndDelete(params.id);
 
       return new Response("Reservation deleted successfully", { status: 200 });
     } else {

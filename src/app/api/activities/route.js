@@ -43,15 +43,13 @@ export const POST = async (request) => {
         capacity,
         price,
         status,
-        imageSrc
-        
+        imageSrc,
       });
-      
-     await newActivity.populate("creator", "firstName lastName");
+
+      await newActivity.populate("creator", "firstName lastName");
       await newActivity.save();
 
       console.log("activity", newActivity);
-      
 
       return Response.json({
         newActivity,
