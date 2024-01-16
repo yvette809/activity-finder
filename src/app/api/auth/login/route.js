@@ -10,13 +10,13 @@ export async function POST(request, response) {
     const { email, password } = await request.json();
     let user = await UserModel.findOne({ email });
     if (!user) {
-      return new NextResponse("User not found.", {
+      return new Response("User not found.", {
         status: 401,
       });
     }
 
     let isMatch = await bcrypt.compare(password, user.password);
-    generateToken(user._id);
+    generateToken(user);
     if (!isMatch) {
       return new Response("Invalid User Credentials", {
         status: 401,
@@ -27,6 +27,7 @@ export async function POST(request, response) {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
+        image: user.image,
       });
     }
   } catch (error) {

@@ -16,7 +16,6 @@ export async function POST(request) {
       image,
       specialisation,
       experience,
-      availability,
     } = await request.json();
 
     const userExist = await UserModel.findOne({ email });
@@ -38,13 +37,12 @@ export async function POST(request) {
       image,
       specialisation: role === "trainer" ? specialisation : undefined,
       experience: role === "trainer" ? experience : undefined,
-      availability: role === "trainer" ? availability : undefined,
     });
 
     if (user) {
       await user.save();
-      generateToken(user._id);
-      console.log("gentk", generateToken(user._id));
+      generateToken(user);
+      console.log("gentk", generateToken(user));
 
       const updatedUser = {
         _id: user._id,
@@ -55,7 +53,6 @@ export async function POST(request) {
         image: user.image,
         specialisation: user.specialisation,
         experience: user.experience,
-        availability: user.availability,
       };
 
       return Response.json(updatedUser);

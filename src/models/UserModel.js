@@ -33,10 +33,8 @@ const UserSchema = new Schema(
     },
     experience: {
       type: Number,
-    },
-    availability: {
-      type: [String],
-    },
+    }
+   
   },
   { timestamps: true }
 );
