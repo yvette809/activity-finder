@@ -21,10 +21,10 @@ const ReservationSchema = new Schema(
       enum: ["confirmed", "pending", "cancelled"],
       default: "pending",
     },
-    totalPrice: {
+   /*  totalPrice: {
       type: Number,
       required: true,
-    },
+    }, */
   },
   { timestamps: true }
 );

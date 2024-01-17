@@ -1,76 +1,139 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { getActivity } from "../page";
+import { getAuthToken } from "@/utils/auth";
+import Link from "next/link";
 
-const page = () => {
+const page = ({ params }) => {
   const router = useRouter();
+  const activityId = params.id;
+  const isAuthenticated = getAuthToken();
 
-  const activityId = router.params.activityId;
-
-  console.log("activityId", activityId);
   const [bookingStatus, setBookingStatus] = useState("reserved");
   const [numberOfPersons, setNumberOfPersons] = useState(1);
-  const [totalPrice, setTotalPrice] = useState(15); // Assuming a default price
+  const [activity, setActivity] = useState({});
+
+  const { price, capacity, activityTimes } = activity;
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState("");
+
+  const handleTimeSlotChange = (e) => {
+    setSelectedTimeSlot(e.target.value);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const fetchedActivity = await getActivity(activityId);
+      setActivity(fetchedActivity);
+    };
+
+    fetchData();
+  }, []);
+
+  console.log("activity =>", activity);
 
   const handleReservation = async () => {
-    try {
-      const response = await fetch(
-        `/api/activities/${activityId}/reservation`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            bookingStatus,
-            numberOfPersons,
-            totalPrice,
-          }),
-        }
-      );
+    // Check if the number of persons is less than 1 or if the price is negative
+    if (numberOfPersons < 1 || (price !== undefined && price < 0)) {
+      console.error("Invalid number of persons or negative price");
+      return;
+    }
+    if (isAuthenticated) {
+      try {
+        const response = await fetch(
+          `/api/activities/${activityId}/reservations`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              bookingStatus,
+              numberOfPersons,
+            }),
+          }
+        );
 
-      if (response.ok) {
-        // Reservation successful
-        console.log("Reservation successful");
-      } else {
-        // Handle errors
-        console.error("Reservation failed:", await response.text());
+        if (response.ok) {
+          // Reservation successful
+          router.push(
+            `/payment?activityId=${activityId}&bookingStatus=${bookingStatus}&numberOfPersons=${numberOfPersons}&selectedTimeSlot=${selectedTimeSlot}`
+          );
+        } else {
+          // Handle errors
+          console.error("Reservation failed:", await response.statusText);
+          return;
+        }
+      } catch (error) {
+        console.error("Error during reservation:", error.message);
       }
-    } catch (error) {
-      console.error("Error during reservation:", error.message);
     }
   };
 
   return (
     <div>
-      <label>
-        Number of Persons:
-        <input
-          type="number"
-          value={numberOfPersons}
-          onChange={(e) => setNumberOfPersons(e.target.value)}
-        />
-      </label>
-      <label>
-        Total Price:
-        <input
-          type="number"
-          value={totalPrice}
-          onChange={(e) => setTotalPrice(e.target.value)}
-        />
-      </label>
-      <label>
-        Booking Status:
+      <div className="reservation-details">
+        <label>
+          Number of Persons:
+          <input
+            type="number"
+            value={numberOfPersons}
+            onChange={(e) => setNumberOfPersons(e.target.value)}
+          />
+        </label>
+        <div className="price-details">
+          <p>Price:${price}</p>
+          <p>Total: ${price * numberOfPersons}</p>
+          <div className="spaces">
+            <span> Spaces left:</span>
+            <span
+              className={` ${capacity < 5 ? "text-red-500" : "text-grey-500"}`}
+            >
+              {capacity}
+            </span>
+          </div>
+        </div>
+        <label>
+          Booking Status:
+          <select
+            value={bookingStatus}
+            onChange={(e) => setBookingStatus(e.target.value)}
+          >
+            <option value="confirmed">Confirmed</option>
+            <option value="pending">Pending</option>
+          </select>
+        </label>
+      </div>
+      <div className="time-slot">
         <select
-          value={bookingStatus}
-          onChange={(e) => setBookingStatus(e.target.value)}
+          value={selectedTimeSlot}
+          onChange={handleTimeSlotChange}
+          className="border border-gray-300 p-2 rounded-md"
         >
-          <option value="confirmed">Confirmed</option>
-          <option value="pending">Pending</option>
+          <option value="" disabled>
+            Select a time slot
+          </option>
+          {activityTimes &&
+            activityTimes.map((timeSlot, index) => (
+              <option key={index} value={timeSlot.startTime}>
+                {`${new Date(
+                  timeSlot.startTime
+                ).toLocaleTimeString()} - ${new Date(
+                  timeSlot.endTime
+                ).toLocaleTimeString()}`}
+              </option>
+            ))}
         </select>
-      </label>
-      <button onClick={handleReservation}>Book Activity</button>
+      </div>
+
+      <button
+        className="bg-primary-blue p-2 "
+        onClick={handleReservation}
+        disabled={numberOfPersons > capacity || numberOfPersons < 1}
+      >
+        Book Activity
+      </button>
     </div>
   );
 };

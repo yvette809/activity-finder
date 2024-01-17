@@ -26,10 +26,10 @@ export const POST = async (request) => {
         location,
         description,
         date,
-        duration,
+        activityTimes,
         capacity,
         price,
-        status,
+        activityStatus,
         imageSrc,
       } = await request.json();
 
@@ -39,10 +39,10 @@ export const POST = async (request) => {
         location,
         description,
         date,
-        duration,
+        activityTimes,
         capacity,
         price,
-        status,
+        activityStatus,
         imageSrc,
       });
 

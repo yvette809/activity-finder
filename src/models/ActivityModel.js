@@ -18,27 +18,34 @@ const ActivitySchema = new Schema(
       type: String,
       required: true,
     },
-    date: {
-      type: Date,
-      default: new Date(),
-    },
-    duration: {
-      type: Number,
-      required: true,
-    },
+    activityTimes: [
+      {
+        date: {
+          type: Date,
+          required: true,
+        },
+        startTime: {
+          type: Date,
+          required: true,
+        },
+        endTime: {
+          type: Date,
+          required: true,
+        },
+      },
+    ],
 
     capacity: {
       type: Number,
       required: true,
     },
-
     price: {
       type: Number,
       required: true,
     },
-    status: {
+    activityStatus: {
       type: String,
-      enum: ["available", "booked", "reserved","cancelled"],
+      enum: ["available", "booked", "reserved", "cancelled"],
       default: "available",
     },
     imageSrc: {
@@ -50,16 +57,15 @@ const ActivitySchema = new Schema(
         ref: "Review",
       },
     ],
-
     reservations: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Reservation"
+        ref: "Reservation",
       },
     ],
   },
   { timestamps: true }
 );
 
-const activity = models.Activity || model("Activity", ActivitySchema);
-export default activity;
+const ActivityModel = models.Activity || model("Activity", ActivitySchema);
+export default ActivityModel;

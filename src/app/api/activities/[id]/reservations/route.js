@@ -17,11 +17,11 @@ export const POST = async (request, { params }) => {
 
     const { bookingStatus } = body;
     const numberOfPersons = parseInt(body.numberOfPersons, 10);
-    const totalPrice = parseInt(body.totalPrice, 10);
+    //const totalPrice = parseInt(body.totalPrice, 10);
     const activityId = params.id;
 
     // Validate input
-    if (isNaN(numberOfPersons) || isNaN(totalPrice)) {
+    if (isNaN(numberOfPersons)) {
       return new Response("Invalid input for numberOfPersons or totalPrice.", {
         status: 400,
       });
@@ -51,13 +51,7 @@ export const POST = async (request, { params }) => {
     }
 
     if (activity.status === "available") {
-      await handleReservation(
-        activity,
-        userId,
-        numberOfPersons,
-        bookingStatus,
-        totalPrice
-      );
+      await handleReservation(activity, userId, numberOfPersons, bookingStatus);
 
       return new Response("reservation created", { status: 201 });
     } else {
@@ -76,8 +70,7 @@ const handleReservation = async (
   activity,
   userId,
   numberOfPersons,
-  bookingStatus,
-  totalPrice
+  bookingStatus
 ) => {
   try {
     // check if this user has already reserved this activity
@@ -96,18 +89,17 @@ const handleReservation = async (
       activityId: activity.id,
       numberOfPersons,
       bookingStatus,
-      totalPrice,
     });
 
     await newReservation.save();
     // reduce the number of spaces for that activity
     activity.capacity -= numberOfPersons;
 
-    // Update the activity status to booked and reduce the number of available spaces
+    // Update the activity status to reserved and reduce the number of available spaces
     await ActivityModel.findByIdAndUpdate(activity.id, {
       $push: { reservations: newReservation },
       $inc: { capacity: -numberOfPersons },
-      status: "reserved",
+      activityStatus: "reserved",
     });
 
     return newReservation;
