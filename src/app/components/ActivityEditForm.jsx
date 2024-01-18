@@ -4,7 +4,12 @@ import { useRouter } from "next/navigation";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
+const ActivityEditForm = ({
+  isAuthenticated,
+  userInfo,
+  setShowModal,
+  activityId,
+}) => {
   console.log("user role", userInfo.role, isAuthenticated);
 
   const router = useRouter();
@@ -47,24 +52,29 @@ const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
       return;
     }
 
-    if (isAuthenticated && userInfo.role === "trainer") {
+    if (isAuthenticated && userInfo && userInfo.role === "trainer") {
       // Call your API route to create the activity
       try {
-        const response = await fetch("http://localhost:3000/api/activities", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(activityData),
-        });
+        const response = await fetch(
+          `http://localhost:3000/api/activities/${activityId}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(activityData),
+          }
+        );
 
         if (response.ok) {
           // Handle success
-          console.log("Activity created successfully");
-          router.push("/");
+          const data = await response.json();
+          setActivityData(data);
+          console.log("Activity updated successfully");
+          setShowModal(false);
         } else {
           // Handle errors
-          console.error("Failed to create activity:", await response.text());
+          console.error("Failed to update activity:", await response.text());
         }
       } catch (error) {
         console.error("Error creating activity:", error.message);
@@ -201,7 +211,7 @@ const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
             type="submit"
             className="bg-primary-blue text-white py-2 px-4 rounded-md"
           >
-            Add Activity
+            update Activity
           </button>
           <button onClick={() => setShowModal(false)}>Close Modal</button>
         </div>
@@ -211,4 +221,4 @@ const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
   );
 };
 
-export default ActivityForm;
+export default ActivityEditForm;

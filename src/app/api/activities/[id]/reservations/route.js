@@ -50,7 +50,7 @@ export const POST = async (request, { params }) => {
       );
     }
 
-    if (activity.status === "available") {
+    if (activity.activityStatus === "available") {
       await handleReservation(activity, userId, numberOfPersons, bookingStatus);
 
       return new Response("reservation created", { status: 201 });

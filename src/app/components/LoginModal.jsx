@@ -27,7 +27,6 @@ const LoginModal = ({ setShowModal }) => {
     const data = await res.json();
     if (res.ok) {
       router.push("/dashboard");
-
       setShowModal(false);
     }
   };
@@ -76,7 +75,7 @@ const LoginModal = ({ setShowModal }) => {
               type="submit"
               className="bg-primary-blue text-white p-2 rounded-md cursor-pointer"
             >
-              Submit
+              Login
             </button>
             <button
               className="text-white bg-primary-blue p-2 rounded-md cursor-pointer"

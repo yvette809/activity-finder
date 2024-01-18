@@ -34,11 +34,22 @@ const Nav = () => {
           <li className="cursor-pointer hover:underline" onClick={handleLogout}>
             Logout
           </li>
-          <li className="cursor-pointer hover:underline">My Bookings</li>
-          {role === "trainer" && (
-            <li className="cursor-pointer hover:underline">Dashboard</li>
+          {role === "user" && (
+            <Link href="/my-bookings">
+              <li className="cursor-pointer hover:underline">My Bookings</li>
+            </Link>
           )}
-          <li className="cursor-pointer hover:underline">My Profile</li>
+
+          {role === "trainer" && (
+            <>
+              <Link href="/dashboard">
+                <li className="cursor-pointer hover:underline">Dashboard</li>
+              </Link>
+              <Link href="/my-profile">
+                <li className="cursor-pointer hover:underline">Profile</li>
+              </Link>
+            </>
+          )}
         </ul>
       ) : (
         <ul className="flex space-x-4">

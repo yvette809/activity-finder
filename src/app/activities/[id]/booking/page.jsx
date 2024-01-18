@@ -9,6 +9,7 @@ import Link from "next/link";
 const page = ({ params }) => {
   const router = useRouter();
   const activityId = params.id;
+  console.log("activityId", activityId);
   const isAuthenticated = getAuthToken();
 
   const [bookingStatus, setBookingStatus] = useState("reserved");
@@ -31,7 +32,6 @@ const page = ({ params }) => {
     fetchData();
   }, []);
 
-  console.log("activity =>", activity);
 
   const handleReservation = async () => {
     // Check if the number of persons is less than 1 or if the price is negative

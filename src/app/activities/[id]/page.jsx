@@ -1,4 +1,8 @@
+"use client";
+import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { getAuthToken } from "@/utils/auth";
 
 // getactivity
 export async function getActivity(id) {
@@ -6,7 +10,6 @@ export async function getActivity(id) {
 
   try {
     const response = await fetch(apiUrl);
-    console.log("response", response);
 
     if (!response.ok) {
       throw new Error("Failed to fetch activity");
@@ -45,6 +48,9 @@ const formatDuration = (startTime, endTime) => {
 };
 
 const page = async ({ params }) => {
+  const isAuthenticated = getAuthToken();
+  const router = useRouter();
+  const [showModal, setShowModal] = useState(false);
   const { id } = params;
   const activity = await getActivity(id);
   const {
@@ -60,6 +66,16 @@ const page = async ({ params }) => {
     activityTimes,
   } = activity;
   const { firstName, lastName } = creator;
+
+  // handle activity click
+
+  const handleActivityBtnClick = () => {
+    if (!isAuthenticated) {
+      router.push("/");
+    } else {
+      router.push(`/activities/${_id}/booking`);
+    }
+  };
 
   return (
     <div className="container mx-auto p-8">
@@ -107,9 +123,16 @@ const page = async ({ params }) => {
           </div>
 
           <div className="book w-1/3">
-            <Link href={`/activities/${_id}/booking`}>
+            <button
+              className="bg-primary-blue text-white py-2 px-4 rounded-md"
+              onClick={handleActivityBtnClick}
+            >
+              Book Activity
+            </button>
+
+            <Link href={`/activity/${_id}`}>
               <button className="bg-primary-blue text-white py-2 px-4 rounded-md">
-                Book Activity
+                Edit Activity
               </button>
             </Link>
           </div>
