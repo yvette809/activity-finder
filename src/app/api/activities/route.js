@@ -14,7 +14,7 @@ export const POST = async (request) => {
     if (session) {
       const user = await UserModel.findById(userId);
 
-      if (!user || user.role !== "trainer") {
+      if (!session && user?.role !== "trainer") {
         return new Response("User not allowed to create an activity", {
           status: 401,
         });

@@ -8,10 +8,10 @@ export const GET = async (request, { params }) => {
   try {
     await connectToDB();
     const activity = await ActivityModel.findById(params.id).populate(
-      "creator",
-      "firstName lastName"
+      "creator"
+      
     );
-    console.log("activity", activity);
+   
     if (!activity) {
       return new Response(`Activity with id ${params.id} not found`, {
         status: 404,
@@ -79,7 +79,7 @@ export const DELETE = async (request, { params }) => {
     }
 
     const user = await UserModel.findById(userId);
-    console.log("userId", userId)
+    
 
     const activity = await ActivityModel.findById(params.id);
     if (!activity) {

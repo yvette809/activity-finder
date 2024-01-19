@@ -3,6 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getAuthToken } from "@/utils/auth";
+import jwt from "jsonwebtoken";
 
 // getactivity
 export async function getActivity(id) {
@@ -49,8 +50,10 @@ const formatDuration = (startTime, endTime) => {
 
 const page = async ({ params }) => {
   const isAuthenticated = getAuthToken();
+  const decodedToken = jwt.decode(isAuthenticated);
+  const userInfo = decodedToken?.userInfo || {};
   const router = useRouter();
-  const [showModal, setShowModal] = useState(false);
+  /* const [showModal, setShowModal] = useState(false); */
   const { id } = params;
   const activity = await getActivity(id);
   const {
@@ -129,12 +132,15 @@ const page = async ({ params }) => {
             >
               Book Activity
             </button>
-
-            <Link href={`/activity/${_id}`}>
-              <button className="bg-primary-blue text-white py-2 px-4 rounded-md">
-                Edit Activity
-              </button>
-            </Link>
+            {isAuthenticated &&
+              userInfo.role === "trainer" &&
+              creator._id === userInfo._id && (
+                <Link href={`/activity/${_id}`}>
+                  <button className="bg-primary-blue text-white py-2 px-4 rounded-md">
+                    Edit Activity
+                  </button>
+                </Link>
+              )}
           </div>
         </div>
       </div>

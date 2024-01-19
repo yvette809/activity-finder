@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getActivity } from "../page";
 import { getAuthToken } from "@/utils/auth";
-import Link from "next/link";
 
 const page = ({ params }) => {
   const router = useRouter();
@@ -12,7 +11,7 @@ const page = ({ params }) => {
   console.log("activityId", activityId);
   const isAuthenticated = getAuthToken();
 
-  const [bookingStatus, setBookingStatus] = useState("reserved");
+  const [bookingStatus, setBookingStatus] = useState("pending");
   const [numberOfPersons, setNumberOfPersons] = useState(1);
   const [activity, setActivity] = useState({});
 
@@ -31,7 +30,6 @@ const page = ({ params }) => {
 
     fetchData();
   }, []);
-
 
   const handleReservation = async () => {
     // Check if the number of persons is less than 1 or if the price is negative
@@ -62,7 +60,7 @@ const page = ({ params }) => {
           );
         } else {
           // Handle errors
-          console.error("Reservation failed:", await response.statusText);
+          console.error("Reservation failed:", await response.json());
           return;
         }
       } catch (error) {
@@ -100,8 +98,9 @@ const page = ({ params }) => {
             value={bookingStatus}
             onChange={(e) => setBookingStatus(e.target.value)}
           >
-            <option value="confirmed">Confirmed</option>
-            <option value="pending">Pending</option>
+            <option value="reserved">pending</option>
+            <option value="pending">confirmed</option>
+            <option value="cancelled">cancelled</option>
           </select>
         </label>
       </div>

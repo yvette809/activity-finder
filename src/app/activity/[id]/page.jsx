@@ -1,15 +1,14 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getAuthToken } from "@/utils/auth";
 import jwt from "jsonwebtoken";
 import DatePicker from "react-datepicker";
+import { getActivity } from "@/app/activities/[id]/page";
 import "react-datepicker/dist/react-datepicker.css";
 
 const page = ({ params }) => {
-  const { activityId } = params;
-
-  console.log("activityid", activityId);
+  const { id } = params;
 
   const isAuthenticated = getAuthToken();
   const decodedToken = jwt.decode(isAuthenticated);
@@ -23,9 +22,46 @@ const page = ({ params }) => {
     activityTimes: [],
     capacity: 0,
     price: 0,
-    activityStatus: "",
+    activityStatus: "available",
     imageSrc: "",
   });
+
+ /*  useEffect(() => {
+    const fetchData = async () => {
+      const fetchedActivity = await getActivity(id);
+
+      setActivityData(fetchedActivity);
+    };
+
+    fetchData();
+  }, []); */
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const fetchedActivity = await getActivity(id);
+      setActivity(fetchedActivity);
+      if (fetchedActivity) {
+        setActivityData({
+          ...activityData,
+          typeOfActivity: fetchedActivity.typeOfActivity,
+          location: fetchedActivity.location,
+          description: fetchedActivity.description,
+          activityTimes: fetchedActivity.activityTimes.map((timeSlot) => ({
+            startTime: timeSlot.startTime,
+            endTime: timeSlot.endTime,
+          })),
+          capacity: fetchedActivity.capacity,
+          price: fetchedActivity.price,
+          activityStatus: fetchedActivity.activityStatus,
+          imageSrc: fetchedActivity.imageSrc,
+        });
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  console.log("activityData", activityData);
 
   const [error, setError] = useState("");
 
@@ -59,7 +95,7 @@ const page = ({ params }) => {
       // Call your API route to create the activity
       try {
         const response = await fetch(
-          `http://localhost:3000/api/activities/${activityId}`,
+          `http://localhost:3000/api/activities/${id}`,
           {
             method: "PUT",
             headers: {
@@ -72,9 +108,19 @@ const page = ({ params }) => {
         if (response.ok) {
           // Handle success
           const data = await response.json();
-          setActivityData(data);
+          console.log("data", data);
+          /*   setActivityData({
+            typeOfActivity: "",
+            location: "",
+            description: data.description,
+            activityTimes: data.activityTimes,
+            capacity: data.capacity,
+            price: data.price,
+            activityStatus: data.activityStatus,
+            imageSrc: data.imageSrc,
+          }); */
           console.log("Activity updated successfully");
-          setShowModal(false);
+          router.push(`/activities(${id})`);
         } else {
           // Handle errors
           console.error("Failed to update activity:", await response.text());
@@ -175,24 +221,29 @@ const page = ({ params }) => {
 
         <div className="mb-4">
           <label className="block mb-2">Activity Times:</label>
-          {activityData.activityTimes.map((timeSlot, index) => (
-            <div key={index} className="flex space-x-4 mb-2">
-              <DatePicker
-                selected={timeSlot.startTime}
-                onChange={(date) => handleTimeChange(date, index, true)}
-                showTimeSelect
-                dateFormat="Pp"
-                className="border p-2 rounded-md"
-              />
-              <DatePicker
-                selected={timeSlot.endTime}
-                onChange={(date) => handleTimeChange(date, index, false)}
-                showTimeSelect
-                dateFormat="Pp"
-                className="border p-2 rounded-md"
-              />
-            </div>
-          ))}
+          {activityData.activityTimes &&
+            activityData.activityTimes.map((timeSlot, index) => (
+              <div key={index} className="flex space-x-4 mb-2">
+                {timeSlot.startTime && timeSlot.endTime && (
+                  <>
+                    <DatePicker
+                      selected={timeSlot.startTime}
+                      onChange={(date) => handleTimeChange(date, index, true)}
+                      showTimeSelect
+                      dateFormat="Pp"
+                      className="border p-2 rounded-md"
+                    />
+                    <DatePicker
+                      selected={timeSlot.endTime}
+                      onChange={(date) => handleTimeChange(date, index, false)}
+                      showTimeSelect
+                      dateFormat="Pp"
+                      className="border p-2 rounded-md"
+                    />
+                  </>
+                )}
+              </div>
+            ))}
           <button
             type="button"
             onClick={() =>
@@ -209,14 +260,14 @@ const page = ({ params }) => {
             Add Time Slot
           </button>
         </div>
-        <div className="modal-btn flex justify-between">
+
+        <div className="flex justify-between">
           <button
             type="submit"
             className="bg-primary-blue text-white py-2 px-4 rounded-md"
           >
             update Activity
           </button>
-          <button onClick={() => setShowModal(false)}>Close Modal</button>
         </div>
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}

@@ -5,10 +5,9 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
-  console.log("user role", userInfo.role, isAuthenticated);
-
   const router = useRouter();
   const [activityData, setActivityData] = useState({
+    creator: userInfo._id,
     typeOfActivity: "",
     location: "",
     description: "",
@@ -47,7 +46,8 @@ const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
       return;
     }
 
-    if (isAuthenticated && userInfo.role === "trainer") {
+    if (isAuthenticated && userInfo?.role === "trainer") {
+      console.log("role", userInfo.role);
       // Call your API route to create the activity
       try {
         const response = await fetch("http://localhost:3000/api/activities", {
@@ -55,7 +55,10 @@ const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(activityData),
+          body: JSON.stringify({
+            ...activityData,
+            creator: userInfo._id,
+          }),
         });
 
         if (response.ok) {
