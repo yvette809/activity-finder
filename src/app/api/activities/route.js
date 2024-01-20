@@ -8,11 +8,11 @@ export const POST = async (request) => {
     await connectToDB();
 
     const session = getSession();
-    const userId = session?.payload.id;
-    console.log("usersession", session, userId);
+    const userId = session?.payload.userInfo._id;
 
     if (session) {
       const user = await UserModel.findById(userId);
+      console.log("user", user);
 
       if (!session && user?.role !== "trainer") {
         return new Response("User not allowed to create an activity", {

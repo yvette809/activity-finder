@@ -14,7 +14,7 @@ const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
     activityTimes: [],
     capacity: 0,
     price: 0,
-    activityStatus: "",
+    activityStatus: "available",
     imageSrc: "",
   });
 
@@ -143,10 +143,10 @@ const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
               onChange={handleChange}
               className="form_input"
             >
-              <option value="available">Available</option>
-              <option value="booked">Booked</option>
-              <option value="reserved">Reserved</option>
-              <option value="cancelled">Cancelled</option>
+              <option value="available">available</option>
+              <option value="full-booked">full-booked</option>
+              <option value="reserved">reserved</option>
+              <option value="cancelled">cancelled</option>
             </select>
           </label>
         </div>

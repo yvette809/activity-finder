@@ -9,7 +9,7 @@ export const GET = async (request, { params }) => {
   try {
     await connectToDB();
     const session = getSession();
-    const userId = session?.payload.id;
+    const userId = session?.payload.userInfo._id;
 
     /*  const reservation = await ReservationModel.findById(params.id).populate(
       "userId",
@@ -62,7 +62,7 @@ export const PATCH = async (request, { params }) => {
     await connectToDB();
     const reqBody = await request.json();
     const session = getSession();
-    const userId = session?.payload.id;
+    const userId = session?.payload.userInfo._id;
 
     if (!session) {
       return new Response("Unauthorized", { status: 401 });
@@ -102,7 +102,7 @@ export const DELETE = async (request, { params }) => {
   try {
     await connectToDB();
     const session = getSession();
-    const userId = session?.payload.id;
+    const userId = session?.payload.userInfo._id;
 
     if (!session) {
       return new Response("Unauthorized", { status: 401 });

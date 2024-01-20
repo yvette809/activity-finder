@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import { getActivity } from "../activities/[id]/page";
+import { getActivity } from "@/utils/api";
+import CreditCardForm from "../components/CreditCardForm";
 
 const page = () => {
   const router = useRouter();
@@ -17,6 +18,9 @@ const page = () => {
   const { price, typeOfActivity } = activity;
 
   console.log("search", numberOfPersons, activityId, bookingStatus);
+
+  const total = price * numberOfPersons;
+  console.log("total", total);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,13 +36,15 @@ const page = () => {
       <div className="intro">
         <p>You are booked for : {typeOfActivity}</p>
         <p>{timeSlot}</p>
-        <p>
-          Total: ${price} X {numberOfPersons} = ${price * numberOfPersons}
-        </p>
+        <p>Total: ${total}</p>
         <p>Number of persons: {numberOfPersons}</p>
 
         <div className="payment">
-          
+          <CreditCardForm
+            activityId={activityId}
+            price={price}
+            persons={numberOfPersons}
+          />
         </div>
       </div>
     </>

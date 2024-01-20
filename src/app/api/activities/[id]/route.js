@@ -9,9 +9,8 @@ export const GET = async (request, { params }) => {
     await connectToDB();
     const activity = await ActivityModel.findById(params.id).populate(
       "creator"
-      
     );
-   
+
     if (!activity) {
       return new Response(`Activity with id ${params.id} not found`, {
         status: 404,
@@ -31,7 +30,7 @@ export const PATCH = async (request, { params }) => {
     await connectToDB();
     const reqBody = await request.json();
     const session = getSession();
-    const userId = session?.payload.id;
+    const userId = session?.payload.userInfo._id;
 
     if (!session) {
       return new Response("Unauthorized", { status: 401 });
@@ -56,6 +55,9 @@ export const PATCH = async (request, { params }) => {
       reqBody,
       { new: true }
     );
+    if (updatedActivity.capacity === 0) {
+      updatedActivity.bookingStatus = "fully-booked";
+    }
 
     await updatedActivity.save();
 
@@ -79,7 +81,6 @@ export const DELETE = async (request, { params }) => {
     }
 
     const user = await UserModel.findById(userId);
-    
 
     const activity = await ActivityModel.findById(params.id);
     if (!activity) {

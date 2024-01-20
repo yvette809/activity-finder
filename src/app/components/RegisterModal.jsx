@@ -14,7 +14,6 @@ const RegisterModal = ({ setShowModal, setShowRegisterModal }) => {
     experience: 0,
   });
   const [submitting, setSubmitting] = useState(false);
-  console.log("user", user);
 
   const handleRegister = async (e) => {
     e.preventDefault();

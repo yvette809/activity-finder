@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getAuthToken } from "@/utils/auth";
 import ActivityForm from "../components/ActivityForm";
+import Reservations from "../components/reservations/Reservations";
+import { getReservations } from "@/utils/api";
 import jwt from "jsonwebtoken";
 import Link from "next/link";
 
@@ -12,6 +14,14 @@ const page = () => {
   const userInfo = decodedToken?.userInfo || {};
 
   const [showModal, setShowModal] = useState(false);
+  const [reservations, setReservations] = useState([]);
+
+  useEffect(() => {
+    const fetchReservations = async () => {
+      const fetchedReservations = await getReservations();
+      setReservations(fetchReservations);
+    };
+  }, []);
 
   return (
     <>
@@ -39,9 +49,7 @@ const page = () => {
         </Link>
       )}
 
-      {/*  {isAuthenticated && userInfo.role === "trainer" && (
-        <ActivityForm isAuthenticated={isAuthenticated} userInfo={userInfo} />
-      )} */}
+      <Reservations reservations={reservations} />
     </>
   );
 };

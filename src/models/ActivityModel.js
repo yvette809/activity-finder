@@ -20,10 +20,6 @@ const ActivitySchema = new Schema(
     },
     activityTimes: [
       {
-        date: {
-          type: Date,
-          required: true,
-        },
         startTime: {
           type: Date,
           required: true,
@@ -45,7 +41,7 @@ const ActivitySchema = new Schema(
     },
     activityStatus: {
       type: String,
-      enum: ["available", "booked", "reserved", "cancelled"],
+      enum: ["available", "full-booked", "reserved", "cancelled"],
       default: "available",
     },
     imageSrc: {
