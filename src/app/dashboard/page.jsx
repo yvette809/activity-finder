@@ -5,6 +5,8 @@ import { getAuthToken } from "@/utils/auth";
 import ActivityForm from "../components/ActivityForm";
 import Reservations from "../components/reservations/Reservations";
 import { getReservations } from "@/utils/api";
+import { getActivities } from "@/utils/api";
+import ActivitiesByTrainer from "../components/ActivitiesByTrainer";
 import jwt from "jsonwebtoken";
 import Link from "next/link";
 
@@ -14,13 +16,15 @@ const page = () => {
   const userInfo = decodedToken?.userInfo || {};
 
   const [showModal, setShowModal] = useState(false);
-  const [reservations, setReservations] = useState([]);
+  const [activities, setActivities] = useState([]);
 
   useEffect(() => {
-    const fetchReservations = async () => {
-      const fetchedReservations = await getReservations();
-      setReservations(fetchReservations);
+    const fetchActivities = async () => {
+      const fetchedActivities = await getActivities();
+      setActivities(fetchedActivities);
     };
+
+    fetchActivities();
   }, []);
 
   return (
@@ -49,7 +53,7 @@ const page = () => {
         </Link>
       )}
 
-      <Reservations reservations={reservations} />
+      <ActivitiesByTrainer activities={activities} />
     </>
   );
 };

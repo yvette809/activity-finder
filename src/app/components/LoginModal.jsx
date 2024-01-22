@@ -87,7 +87,7 @@ const LoginModal = ({ setShowModal }) => {
 
           <div>
             <div>
-              <p>
+              <div>
                 Don't have an account? Please{" "}
                 <strong
                   className="text-primary-blue cursor-pointer flex justify-center"
@@ -95,7 +95,7 @@ const LoginModal = ({ setShowModal }) => {
                 >
                   Register
                 </strong>
-              </p>
+              </div>
             </div>
           </div>
         </form>

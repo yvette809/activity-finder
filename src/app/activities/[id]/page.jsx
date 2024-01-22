@@ -42,6 +42,8 @@ const page = ({ params }) => {
     status,
     imageSrc,
     activityTimes,
+    skillLevel,
+    ageGroup,
   } = activity;
   // const { firstName, lastName } = creator;
 
@@ -75,8 +77,23 @@ const page = ({ params }) => {
             <p className="text-lg font-semibold mb-2">Location: {location}</p>
             <p className="text-gray-600 mb-2">Description: {description}</p>
             <p className="text-gray-600 mb-2">Capacity: {capacity} people</p>
+            <p
+              className={`text-gray-600 mb-2 ${
+                capacity - activity?.reservations?.length < 5
+                  ? "text-red-500"
+                  : "text-gray-500"
+              }`}
+            >
+              Spaces left: {capacity - activity?.reservations?.length}
+            </p>
             <p className="text-gray-600 mb-2">Price: ${price}</p>
             <p className="text-gray-600 mb-2">Status: {status}</p>
+            <p className="text-gray-600 mb-2">
+              Skill Level: {skillLevel && skillLevel}
+            </p>
+            <p className="text-gray-600 mb-2">
+              Age Group: {ageGroup && ageGroup}
+            </p>
 
             <div>
               {activityTimes &&

@@ -5,7 +5,7 @@ export async function getActivities() {
   const apiUrl = `${base_url}/api/activities`;
 
   try {
-    const response = await fetch(apiUrl);
+    const response = await fetch(apiUrl, { next: { revalidate: 3600 } });
 
     if (!response.ok) {
       throw new Error("Failed to fetch activities");
@@ -61,21 +61,21 @@ export async function getUserReservation(userId) {
 //get all reservations
 
 // get all reservations
-export async function getReservations() {
-  const apiUrl = `${base_url}/api/reservations`;
+export async function getReservationById(id) {
+  const apiUrl = `${base_url}/api/reservations/${id}`;
 
   try {
     const response = await fetch(apiUrl);
 
     if (!response.ok) {
-      throw new Error("Failed to fetch reservations");
-      toast.error("failed to fetch reservations");
+      throw new Error("Failed to fetch reservation");
+      toast.error("failed to fetch reservation");
     }
 
-    const reservations = await response.json();
-    return reservations;
+    const reservation = await response.json();
+    return reservation;
   } catch (error) {
-    console.error("Error fetching reservations:", error.message);
+    console.error("Error fetching reservation:", error.message);
     throw error;
   }
 }

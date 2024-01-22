@@ -29,7 +29,6 @@ const RegisterModal = ({ setShowModal, setShowRegisterModal }) => {
       });
 
       const data = await res.json();
-      console.log("data", data);
       if (res.ok) {
         setShowModal(true);
         setShowRegisterModal(false); // Close the RegisterModal

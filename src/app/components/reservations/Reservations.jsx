@@ -1,9 +1,19 @@
-import React from 'react'
+import React from "react";
+import ReservationCard from "./ReservationCard";
 
-const Reservations = () => {
+const Reservations = ({ reservations }) => {
   return (
-    <div>Reservations</div>
-  )
-}
+    <>
+      {reservations.length <= 0 && (
+        <p>There are no reservations for this activity</p>
+      )}
 
-export default Reservations
+      {reservations &&
+        reservations.map((reservation) => (
+          <ReservationCard reservation={reservation} />
+        ))}
+    </>
+  );
+};
+
+export default Reservations;

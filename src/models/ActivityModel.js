@@ -44,6 +44,15 @@ const ActivitySchema = new Schema(
       enum: ["available", "full-booked", "reserved", "cancelled"],
       default: "available",
     },
+    skillLevel: {
+      type: String,
+      enum: ["beginner", "intermediate", "advanced"],
+      default: "intermediate",
+    },
+    ageGroup: {
+      type: String,
+      required: true,
+    },
     imageSrc: {
       type: String,
     },

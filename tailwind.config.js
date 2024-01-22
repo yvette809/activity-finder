@@ -7,11 +7,16 @@ module.exports = {
   ],
   theme: {
     extend: {
-      colors: {'primary-blue': '#3498db'},
+      colors: { "primary-blue": "#3498db" },
       fontFamily: {
         satoshi: ["Satoshi", "sans-serif"],
         inter: ["Inter", "sans-serif"],
       },
+    },
+  },
+  variants: {
+    extend: {
+      width: ["responsive"],
     },
   },
   plugins: [],

@@ -39,7 +39,7 @@ const page = ({ params }) => {
   useEffect(() => {
     const fetchData = async () => {
       const fetchedActivity = await getActivity(id);
-      setActivity(fetchedActivity);
+      setActivityData(fetchedActivity);
       if (fetchedActivity) {
         setActivityData({
           ...activityData,

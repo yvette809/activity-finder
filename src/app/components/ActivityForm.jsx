@@ -16,6 +16,8 @@ const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
     price: 0,
     activityStatus: "available",
     imageSrc: "",
+    skillLevel: "intermediate",
+    ageGroup: "",
   });
 
   const [error, setError] = useState("");
@@ -107,6 +109,7 @@ const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
               value={activityData.description}
               onChange={handleChange}
               className="form_textarea "
+              maxLength={500}
             />
           </label>
         </div>
@@ -162,6 +165,34 @@ const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
             />
           </label>
         </div>
+        <div>
+          <label className="block text-sm font-semibold text-gray-600">
+            Skill Level:
+            <select
+              name="skillLevel"
+              value={activityData.skillLevel}
+              onChange={handleChange}
+              className="form_input"
+            >
+              <option value="beginner">Beginner</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="advanced">Advanced</option>
+            </select>
+          </label>
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold text-gray-600">
+            Age Group:
+            <input
+              type="text"
+              name="ageGroup"
+              value={activityData.ageGroup}
+              onChange={handleChange}
+              className="form_input"
+            />
+          </label>
+        </div>
 
         <div className="mb-4">
           <label className="block mb-2">Activity Times:</label>
@@ -171,6 +202,7 @@ const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
                 selected={timeSlot.startTime}
                 onChange={(date) => handleTimeChange(date, index, true)}
                 showTimeSelect
+                minDate={new Date()}
                 dateFormat="Pp"
                 className="border p-2 rounded-md"
               />
@@ -178,6 +210,7 @@ const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
                 selected={timeSlot.endTime}
                 onChange={(date) => handleTimeChange(date, index, false)}
                 showTimeSelect
+                minDate={new Date()}
                 dateFormat="Pp"
                 className="border p-2 rounded-md"
               />

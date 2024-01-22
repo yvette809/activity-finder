@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
 
-const ReservationCard = () => {
+const ReservationCard = ({ reservation }) => {
+  console.log("reservation", reservation);
   return (
-    <div>ReservationCard</div>
-  )
-}
+    <>
+      <p>{reservation?.userId?.firstName}</p>
+    </>
+  );
+};
 
-export default ReservationCard
+export default ReservationCard;

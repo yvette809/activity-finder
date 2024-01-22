@@ -12,16 +12,14 @@ export const POST = async (request) => {
 
     if (session) {
       const user = await UserModel.findById(userId);
-      console.log("user", user);
 
-      if (!session && user?.role !== "trainer") {
+      if (!session || (session && user?.role !== "trainer")) {
         return new Response("User not allowed to create an activity", {
           status: 401,
         });
       }
 
       const {
-        creator,
         typeOfActivity,
         location,
         description,
@@ -30,6 +28,8 @@ export const POST = async (request) => {
         capacity,
         price,
         activityStatus,
+        skillLevel,
+        ageGroup,
         imageSrc,
       } = await request.json();
 
@@ -43,13 +43,13 @@ export const POST = async (request) => {
         capacity,
         price,
         activityStatus,
+        skillLevel,
+        ageGroup,
         imageSrc,
       });
 
       await newActivity.populate("creator", "firstName lastName");
       await newActivity.save();
-
-      console.log("activity", newActivity);
 
       return Response.json({
         newActivity,

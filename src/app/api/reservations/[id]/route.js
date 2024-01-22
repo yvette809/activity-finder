@@ -4,17 +4,12 @@ import UserModel from "@/models/UserModel";
 import { getSession } from "@/utils/session";
 import connectToDB from "@/utils/connectDB";
 
-// get activity by id
+// get reservation by id
 export const GET = async (request, { params }) => {
   try {
     await connectToDB();
     const session = getSession();
     const userId = session?.payload.userInfo._id;
-
-    /*  const reservation = await ReservationModel.findById(params.id).populate(
-      "userId",
-      "firstName lastName"
-    ); */
 
     const reservation = await ReservationModel.findById(params.id)
       .populate("userId", "firstName lastName")
