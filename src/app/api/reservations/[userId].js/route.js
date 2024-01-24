@@ -1,3 +1,9 @@
+
+
+import { getSession } from "@/utils/session";
+import ReservationModel from "@/models/reservationModel";
+import connectToDB from "@/utils/connectDB";
+
 // reservation for loggedin user
 export const GET = async () => {
   try {
@@ -5,12 +11,15 @@ export const GET = async () => {
     const session = getSession();
     const userId = session?.payload.userInfo._id;
 
-    const reservation = await ReservationModel.find({ userId }).populate(
+    /* const reservation = await ReservationModel.find({ userId }).populate(
       "activityId"
-    );
+    ); */
+    const reservation = await ReservationModel.find(
+      (reservation) => reservation.userId.toString() === userId.toString()
+    ).populate("activityId");
 
     if (!reservation) {
-      return new Response(`Reservation with id ${userId} not found`, {
+      return new Response(`There is no reservation for this user ${userId} `, {
         status: 404,
       });
     }

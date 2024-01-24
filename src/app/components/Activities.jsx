@@ -1,7 +1,7 @@
 import ActivityCard from "./ActivityCard";
 
-const Activities = async ({ data }) => {
-  console.log("data", data)
+const Activities = ({ data }) => {
+  console.log("data", data);
   return (
     <div>
       {data &&

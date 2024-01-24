@@ -22,3 +22,15 @@ export const formatDuration = (startTime, endTime) => {
       : `${durationInHours} hrs`;
   }
 };
+
+
+// Function to format date and time
+export const formatTime = (dateTimeString) => {
+  const options = { year: "numeric", month: "long", day: "numeric" };
+  const date = new Date(dateTimeString).toLocaleDateString(undefined, options);
+  
+  const timeOptions = { hour: "numeric", minute: "numeric" };
+  const time = new Date(dateTimeString).toLocaleTimeString(undefined, timeOptions);
+
+  return { date, time };
+};

@@ -100,7 +100,7 @@ const page = ({ params }) => {
                 activityTimes.map((timeSlot, index) => (
                   <div key={index} className="time-slot mb-2">
                     <p className="text-gray-600">
-                      Date: {new Date(timeSlot.date).toDateString()}
+                      Date: {new Date(timeSlot.startTime).toDateString()}
                     </p>
                     <p className="text-gray-600">
                       Start Time:{" "}
@@ -122,19 +122,14 @@ const page = ({ params }) => {
           </div>
 
           <div className="book w-1/3">
-            <button
-              className="bg-primary-blue text-white py-2 px-4 rounded-md"
-              onClick={handleActivityBtnClick}
-            >
+            <button className="outline_btn mb-3" onClick={handleActivityBtnClick}>
               Book Activity
             </button>
             {isAuthenticated &&
               userInfo?.role === "trainer" &&
               creator?._id === userInfo?._id && (
                 <Link href={`/activity/${_id}`}>
-                  <button className="bg-primary-blue text-white py-2 px-4 rounded-md">
-                    Edit Activity
-                  </button>
+                  <button className="blue_btn">Edit Activity</button>
                 </Link>
               )}
           </div>

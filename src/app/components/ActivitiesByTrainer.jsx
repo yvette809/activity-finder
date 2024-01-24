@@ -22,7 +22,7 @@ const ActivitiesByTrainer = ({ activities }) => {
 
   return (
     <>
-      {activitiesByTrainer.length <= 0 && (
+      {activitiesByTrainer.length <= 0 && userInfo.role === "trainer" && (
         <p>There are no activities for this Trainer</p>
       )}
       <div className=" w-full ">

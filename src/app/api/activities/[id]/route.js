@@ -44,19 +44,20 @@ export const PATCH = async (request, { params }) => {
     }
 
     if (activity.creator._id !== user._id && user.role !== "trainer") {
-      return new Response("user is not authorised to update acticity", {
+      return new Response("User is not authorized to update activity", {
         status: 401,
       });
     }
-    console.log("creatorId", activity.creator._id);
-    console.log("userId", user._id);
+
     const updatedActivity = await ActivityModel.findByIdAndUpdate(
       params.id,
       reqBody,
       { new: true }
     );
-    if (updatedActivity.capacity === 0) {
-      updatedActivity.bookingStatus = "fully-booked";
+
+    // Check if available spaces are zero and update the bookingStatus
+    if (updatedActivity.capacity - updatedActivity.reservations.length === 0) {
+      updatedActivity.activityStatus = "full-booked";
     }
 
     await updatedActivity.save();

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { getActivity } from "@/utils/api";
+import { formatTime } from "@/utils/formatTime";
 import CreditCardForm from "../components/CreditCardForm";
 
 const page = () => {
@@ -17,10 +18,8 @@ const page = () => {
 
   const { price, typeOfActivity } = activity;
 
-  console.log("search", numberOfPersons, activityId, bookingStatus);
-
   const total = price * numberOfPersons;
-  console.log("total", total);
+  const formattedTimeSlot = formatTime(timeSlot);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,7 +34,8 @@ const page = () => {
     <>
       <div className="intro">
         <p>You are booked for : {typeOfActivity}</p>
-        <p>{timeSlot}</p>
+        <p>Date:{formattedTimeSlot.date}</p>
+        <p>Time:{formattedTimeSlot.time}</p>
         <p>Total: ${total}</p>
         <p>Number of persons: {numberOfPersons}</p>
 

@@ -5,7 +5,7 @@ export async function getActivities() {
   const apiUrl = `${base_url}/api/activities`;
 
   try {
-    const response = await fetch(apiUrl, { next: { revalidate: 3600 } });
+    const response = await fetch(apiUrl, { next: { revalidate: 60 } });
 
     if (!response.ok) {
       throw new Error("Failed to fetch activities");
@@ -19,6 +19,27 @@ export async function getActivities() {
     throw error;
   }
 }
+
+export const getFilteredActivities = async (filters) => {
+  try {
+    const queryParams = new URLSearchParams(filters).toString();
+    console.log(`${base_url}/api/activities/search?${queryParams}`);
+
+    /*    const response = await fetch(`${base_url}/api/activities?${queryParams}`); */
+    const response = await fetch(
+      `${base_url}/api/activities/search?${queryParams}`
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch activities");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching filtered activities:", error);
+    throw error;
+  }
+};
 
 // getactivity
 export async function getActivity(id) {
@@ -40,7 +61,7 @@ export async function getActivity(id) {
 }
 
 // getUserReservation
-export async function getUserReservation(userId) {
+export async function getUserReservations(userId) {
   const apiUrl = `${base_url}/api/reservations/${userId}`;
 
   try {
@@ -51,6 +72,7 @@ export async function getUserReservation(userId) {
     }
 
     const reservation = await response.json();
+    console.log("reserve", reserve);
     return reservation;
   } catch (error) {
     console.error("Error fetching activity:", error.message);

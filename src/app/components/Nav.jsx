@@ -27,13 +27,16 @@ const Nav = () => {
 
   return (
     <ClientOnly>
-      <nav className="flex items-center justify-between p-4 bg-primary-blue text-white">
+      <nav className="fixed top-0 left-0 right-0 z-10 flex items-center justify-between p-4 bg-deep-green text-white shadow-lg">
         <Link href="/">
           <Image src="/assets/logo.jpg" alt="logo" height="50" width="50" />
         </Link>
         {authToken ? (
           <ul className="flex space-x-4">
-            <li><span>{firstName}</span><Image src={image} height="30" width="30"/></li>
+            <li className="flex">
+              <span className="mr-2">{firstName}</span>
+              <Image src={image} height="30" width="30" />
+            </li>
             <li
               className="cursor-pointer hover:underline"
               onClick={handleLogout}
@@ -41,7 +44,7 @@ const Nav = () => {
               Logout
             </li>
             {role === "user" && (
-              <Link href="/my-bookings">
+              <Link href={`/my-bookings/${userInfo._id}`}>
                 <li className="cursor-pointer hover:underline">My Bookings</li>
               </Link>
             )}

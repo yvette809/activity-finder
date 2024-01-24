@@ -2,17 +2,17 @@ import Link from "next/link";
 import moment from "moment";
 
 const ActivityCard = ({ activity }) => {
-  if (!activity || !activity.creator) {
+  /* if (!activity || !activity.creator) {
     // Handle the case where creator is missing
     return <p>Creator information not available</p>;
-  }
+  } */
 
   const { imageSrc, creator, typeOfActivity, location, _id, activityTimes } =
     activity;
   const { firstName } = creator;
 
   return (
-    <div className=" p-4 mx-2 rounded-md shadow-md lg:w-1/4 xl:w-1/4 md:w-1/3 sm:w-full ">
+    <div className="mx-10 rounded-md shadow-md lg:w-1/4 xl:w-1/4 md:w-1/3 sm:w-full ">
       {imageSrc && (
         <Link href={`/activities/${_id}`}>
           <img

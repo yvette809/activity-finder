@@ -7,7 +7,7 @@ module.exports = {
   ],
   theme: {
     extend: {
-      colors: { "primary-blue": "#3498db" },
+      colors: { "primary-blue": "#3498db", "deep-green": "#2c412F" },
       fontFamily: {
         satoshi: ["Satoshi", "sans-serif"],
         inter: ["Inter", "sans-serif"],
