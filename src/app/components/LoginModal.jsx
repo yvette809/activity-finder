@@ -73,12 +73,12 @@ const LoginModal = ({ setShowModal }) => {
           <div className="flex justify-between align-between">
             <button
               type="submit"
-              className="bg-primary-blue text-white p-2 rounded-md cursor-pointer"
+              className="bg-deep-green text-white p-2 rounded-md cursor-pointer"
             >
               Login
             </button>
             <button
-              className="text-white bg-primary-blue p-2 rounded-md cursor-pointer"
+              className="text-white bg-deep-green p-2 rounded-md cursor-pointer"
               onClick={() => setShowModal(false)}
             >
               Close
@@ -87,15 +87,15 @@ const LoginModal = ({ setShowModal }) => {
 
           <div>
             <div>
-              <p>
+              <div>
                 Don't have an account? Please{" "}
                 <strong
-                  className="text-primary-blue cursor-pointer flex justify-center"
+                  className="text-deep-green cursor-pointer flex justify-center"
                   onClick={() => setShowRegisterModal(true)}
                 >
                   Register
                 </strong>
-              </p>
+              </div>
             </div>
           </div>
         </form>

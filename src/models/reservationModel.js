@@ -16,15 +16,12 @@ const ReservationSchema = new Schema(
       required: true,
     },
 
-    bookingStatus: {
+   /*  bookingStatus: {
       type: String,
       enum: ["confirmed", "pending", "cancelled"],
       default: "pending",
     },
-   /*  totalPrice: {
-      type: Number,
-      required: true,
-    }, */
+     */
   },
   { timestamps: true }
 );

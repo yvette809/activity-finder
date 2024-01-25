@@ -3,7 +3,9 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import { getActivity } from "../activities/[id]/page";
+import { getActivity } from "@/utils/api";
+import { formatTime } from "@/utils/formatTime";
+import CreditCardForm from "../components/CreditCardForm";
 
 const page = () => {
   const router = useRouter();
@@ -16,7 +18,8 @@ const page = () => {
 
   const { price, typeOfActivity } = activity;
 
-  console.log("search", numberOfPersons, activityId, bookingStatus);
+  const total = price * numberOfPersons;
+  const formattedTimeSlot = formatTime(timeSlot);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,20 +31,25 @@ const page = () => {
   }, []);
 
   return (
-    <>
-      <div className="intro">
-        <p>You are booked for : {typeOfActivity}</p>
-        <p>{timeSlot}</p>
-        <p>
-          Total: ${price} X {numberOfPersons} = ${price * numberOfPersons}
-        </p>
-        <p>Number of persons: {numberOfPersons}</p>
-
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="max-w-md p-8 bg-white shadow-md rounded-md">
+        <h1 className="text-2xl font-bold mb-6">Booking Details</h1>
+        <div className="mb-4">
+          <p className="text-gray-700">You are booked for: {typeOfActivity}</p>
+          <p className="text-gray-700">Date: {formattedTimeSlot.date}</p>
+          <p className="text-gray-700">Time: {formattedTimeSlot.time}</p>
+          <p className="text-gray-700">Total: ${total}</p>
+          <p className="text-gray-700">Number of persons: {numberOfPersons}</p>
+        </div>
         <div className="payment">
-          
+          <CreditCardForm
+            activityId={activityId}
+            price={price}
+            persons={numberOfPersons}
+          />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

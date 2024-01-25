@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { getAuthToken } from "@/utils/auth";
 import jwt from "jsonwebtoken";
 import DatePicker from "react-datepicker";
-import { getActivity } from "@/app/activities/[id]/page";
+import { getActivity } from "@/utils/api";
 import "react-datepicker/dist/react-datepicker.css";
 
 const page = ({ params }) => {
@@ -39,7 +39,7 @@ const page = ({ params }) => {
   useEffect(() => {
     const fetchData = async () => {
       const fetchedActivity = await getActivity(id);
-      setActivity(fetchedActivity);
+      setActivityData(fetchedActivity);
       if (fetchedActivity) {
         setActivityData({
           ...activityData,

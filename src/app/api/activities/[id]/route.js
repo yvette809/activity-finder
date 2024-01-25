@@ -9,9 +9,8 @@ export const GET = async (request, { params }) => {
     await connectToDB();
     const activity = await ActivityModel.findById(params.id).populate(
       "creator"
-      
     );
-   
+
     if (!activity) {
       return new Response(`Activity with id ${params.id} not found`, {
         status: 404,
@@ -31,7 +30,7 @@ export const PATCH = async (request, { params }) => {
     await connectToDB();
     const reqBody = await request.json();
     const session = getSession();
-    const userId = session?.payload.id;
+    const userId = session?.payload.userInfo._id;
 
     if (!session) {
       return new Response("Unauthorized", { status: 401 });
@@ -45,17 +44,21 @@ export const PATCH = async (request, { params }) => {
     }
 
     if (activity.creator._id !== user._id && user.role !== "trainer") {
-      return new Response("user is not authorised to update acticity", {
+      return new Response("User is not authorized to update activity", {
         status: 401,
       });
     }
-    console.log("creatorId", activity.creator._id);
-    console.log("userId", user._id);
+
     const updatedActivity = await ActivityModel.findByIdAndUpdate(
       params.id,
       reqBody,
       { new: true }
     );
+
+    // Check if available spaces are zero and update the bookingStatus
+    if (updatedActivity.capacity - updatedActivity.reservations.length === 0) {
+      updatedActivity.activityStatus = "full-booked";
+    }
 
     await updatedActivity.save();
 
@@ -79,7 +82,6 @@ export const DELETE = async (request, { params }) => {
     }
 
     const user = await UserModel.findById(userId);
-    
 
     const activity = await ActivityModel.findById(params.id);
     if (!activity) {

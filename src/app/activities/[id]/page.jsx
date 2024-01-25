@@ -1,61 +1,36 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { getActivity } from "@/utils/api";
 import { useRouter } from "next/navigation";
 import { getAuthToken } from "@/utils/auth";
+import { formatDuration } from "@/utils/formatTime";
 import jwt from "jsonwebtoken";
 
-// getactivity
-export async function getActivity(id) {
-  const apiUrl = `http://localhost:3000/api/activities/${id}`;
-
-  try {
-    const response = await fetch(apiUrl);
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch activity");
-    }
-
-    const activity = await response.json();
-    return activity;
-  } catch (error) {
-    console.error("Error fetching activity:", error.message);
-    throw error;
-  }
-}
-
-// Helper function to format duration
-const formatDuration = (startTime, endTime) => {
-  const startTimestamp = new Date(startTime).getTime();
-  const endTimestamp = new Date(endTime).getTime();
-
-  // Check if the timestamps are valid
-  if (isNaN(startTimestamp) || isNaN(endTimestamp)) {
-    return "Invalid Time";
-  }
-
-  const durationInMilliseconds = endTimestamp - startTimestamp;
-
-  // Convert duration to hours
-  const durationInHours = durationInMilliseconds / (1000 * 60 * 60);
-
-  if (durationInHours < 1) {
-    return `${Math.round(durationInHours * 60)} mins`;
-  } else {
-    return durationInHours === 1
-      ? `${durationInHours} hr`
-      : `${durationInHours} hrs`;
-  }
-};
-
-const page = async ({ params }) => {
+const page = ({ params }) => {
+  const [activity, setActivity] = useState({});
   const isAuthenticated = getAuthToken();
   const decodedToken = jwt.decode(isAuthenticated);
   const userInfo = decodedToken?.userInfo || {};
   const router = useRouter();
-  /* const [showModal, setShowModal] = useState(false); */
   const { id } = params;
-  const activity = await getActivity(id);
+
+  // fetch activity
+  useEffect(() => {
+    const fetchActivity = async () => {
+      try {
+        const fetchedActivity = await getActivity(id);
+        setActivity(fetchedActivity);
+      } catch (error) {
+        console.error("Error fetching activity:", error.message);
+      }
+    };
+
+    if (id) {
+      fetchActivity();
+    }
+  }, [id]);
+
   const {
     _id,
     creator,
@@ -67,8 +42,10 @@ const page = async ({ params }) => {
     status,
     imageSrc,
     activityTimes,
+    skillLevel,
+    ageGroup,
   } = activity;
-  const { firstName, lastName } = creator;
+  // const { firstName, lastName } = creator;
 
   // handle activity click
 
@@ -82,70 +59,85 @@ const page = async ({ params }) => {
 
   return (
     <div className="container mx-auto p-8">
-      <div className="bg-white p-4 rounded-md shadow-md">
+      <div className="bg-white p-8 rounded-md shadow-md">
         {imageSrc && (
           <img
             src={imageSrc}
-            alt={`Image for ${firstName}'s activity`}
-            className="w-full h-60 object-cover mb-4 rounded-md"
+            alt={`Image for ${
+              creator?.firstName && creator.firstName
+            }'s activity`}
+            className="w-full h-64 object-cover mb-6 rounded-md shadow-lg"
           />
         )}
-        <h1 className="text-3xl font-bold mb-4">
-          {typeOfActivity} with {firstName} {lastName}
+        <h1 className="text-4xl font-bold mb-4">
+          {typeOfActivity} with {creator?.firstName} {creator?.lastName}
         </h1>
-        <div className="details flex justify-between">
-          <div className="details-specs w-2/3 pr-4">
+        <div className="flex flex-wrap justify-between">
+          <div className="w-full md:w-2/3 pr-4">
             <p className="text-lg font-semibold mb-2">Location: {location}</p>
-            <p className="text-gray-600 mb-2">Description: {description}</p>
-            <p className="text-gray-600 mb-2">Capacity: {capacity} people</p>
-            <p className="text-gray-600 mb-2">Price: ${price}</p>
-            <p className="text-gray-600 mb-2">Status: {status}</p>
+            <p className="text-gray-700 mb-2">Description: {description}</p>
+            <p className="text-gray-700 mb-2">Capacity: {capacity} people</p>
+            <p
+              className={`text-gray-700 mb-2 ${
+                capacity - activity?.reservations?.length < 5
+                  ? "text-red-500"
+                  : "text-gray-500"
+              }`}
+            >
+              Spaces left: {capacity - activity?.reservations?.length}
+            </p>
+            <p className="text-gray-700 mb-2">Price: ${price}</p>
+            <p className="text-gray-700 mb-2">Status: {status}</p>
+            <p className="text-gray-700 mb-2">
+              Skill Level: {skillLevel && skillLevel}
+            </p>
+            <p className="text-gray-700 mb-2">
+              Age Group: {ageGroup && ageGroup}
+            </p>
 
             <div>
-              {activityTimes.map((timeSlot, index) => (
-                <div key={index} className="time-slot mb-2">
-                  <p className="text-gray-600">
-                    Date: {new Date(timeSlot.date).toDateString()}
-                  </p>
-                  <p className="text-gray-600">
-                    Start Time:{" "}
-                    {new Date(timeSlot.startTime).toLocaleTimeString()}
-                  </p>
-                  <p className="text-gray-600">
-                    End Time: {new Date(timeSlot.endTime).toLocaleTimeString()}
-                  </p>
-                  <p>
-                    <p>
+              {activityTimes &&
+                activityTimes.map((timeSlot, index) => (
+                  <div key={index} className="time-slot mb-4">
+                    <p className="text-gray-700">
+                      Date: {new Date(timeSlot.startTime).toLocaleDateString()}
+                    </p>
+                    <p className="text-gray-700">
+                      Start Time:{" "}
+                      {new Date(timeSlot.startTime).toLocaleTimeString()}
+                    </p>
+                    <p className="text-gray-700">
+                      End Time:{" "}
+                      {new Date(timeSlot.endTime).toLocaleTimeString()}
+                    </p>
+                    <p className="text-gray-700">
                       Duration:{" "}
                       {formatDuration(timeSlot.startTime, timeSlot.endTime)}
                     </p>
-                  </p>
-                </div>
-              ))}
+                  </div>
+                ))}
             </div>
           </div>
 
-          <div className="book w-1/3">
+          <div className="w-full md:w-1/3 mt-6 md:mt-0">
             <button
-              className="bg-primary-blue text-white py-2 px-4 rounded-md"
+              className="outline_btn mb-4 md:mb-6"
               onClick={handleActivityBtnClick}
             >
               Book Activity
             </button>
             {isAuthenticated &&
-              userInfo.role === "trainer" &&
-              creator._id === userInfo._id && (
+              userInfo?.role === "trainer" &&
+              creator?._id === userInfo?._id && (
                 <Link href={`/activity/${_id}`}>
-                  <button className="bg-primary-blue text-white py-2 px-4 rounded-md">
-                    Edit Activity
-                  </button>
+                  <button className="blue_btn">Edit Activity</button>
                 </Link>
               )}
           </div>
         </div>
       </div>
       {/* Activity reviews will go in here */}
-      {/* edit activity button that will open up a modal */}
+      {/* Edit activity button that will open up a modal */}
     </div>
   );
 };

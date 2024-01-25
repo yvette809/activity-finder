@@ -4,21 +4,16 @@ import UserModel from "@/models/UserModel";
 import { getSession } from "@/utils/session";
 import connectToDB from "@/utils/connectDB";
 
-// get activity by id
+// get reservation by id
 export const GET = async (request, { params }) => {
   try {
     await connectToDB();
     const session = getSession();
-    const userId = session?.payload.id;
-
-    /*  const reservation = await ReservationModel.findById(params.id).populate(
-      "userId",
-      "firstName lastName"
-    ); */
+    const userId = session?.payload.userInfo._id;
 
     const reservation = await ReservationModel.findById(params.id)
-      .populate("userId", "firstName lastName")
-      .populate("activityId");
+       .populate("userId", "firstName lastName")
+      .populate("activityId"); 
 
     // Now reservation.userId and reservation.activityId will be fully populated
 
@@ -38,10 +33,10 @@ export const GET = async (request, { params }) => {
     const isActivityCreator = activity.creator === userId;
 
     // Check if the user trying to get the reservation is the person who made it
-    const isReservationOwner = reservation.userId._id.toString() === userId;
+    const isReservationOwner = reservation.userId._id === userId;
 
-    if (isActivityCreator || isReservationOwner) {
-      return Response.json(reservation, { status: 200 });
+   /*  if (isActivityCreator || isReservationOwner) {
+      return new Response(JSON.stringify(reservation), { status: 200 });
     } else {
       return new Response(
         "Unauthorized. You don't have permission to view this reservation.",
@@ -49,7 +44,10 @@ export const GET = async (request, { params }) => {
           status: 401,
         }
       );
-    }
+    } */
+     if (session) {
+      return new Response(JSON.stringify(reservation), { status: 200 });
+    } 
   } catch (error) {
     console.error(error);
     return new Response("Error retrieving reservation", { status: 500 });
@@ -62,7 +60,7 @@ export const PATCH = async (request, { params }) => {
     await connectToDB();
     const reqBody = await request.json();
     const session = getSession();
-    const userId = session?.payload.id;
+    const userId = session?.payload.userInfo._id;
 
     if (!session) {
       return new Response("Unauthorized", { status: 401 });
@@ -102,7 +100,7 @@ export const DELETE = async (request, { params }) => {
   try {
     await connectToDB();
     const session = getSession();
-    const userId = session?.payload.id;
+    const userId = session?.payload.userInfo._id;
 
     if (!session) {
       return new Response("Unauthorized", { status: 401 });

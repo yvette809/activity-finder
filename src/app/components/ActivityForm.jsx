@@ -14,8 +14,10 @@ const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
     activityTimes: [],
     capacity: 0,
     price: 0,
-    activityStatus: "",
+    activityStatus: "available",
     imageSrc: "",
+    skillLevel: "intermediate",
+    ageGroup: "",
   });
 
   const [error, setError] = useState("");
@@ -107,6 +109,7 @@ const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
               value={activityData.description}
               onChange={handleChange}
               className="form_textarea "
+              maxLength={500}
             />
           </label>
         </div>
@@ -143,10 +146,10 @@ const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
               onChange={handleChange}
               className="form_input"
             >
-              <option value="available">Available</option>
-              <option value="booked">Booked</option>
-              <option value="reserved">Reserved</option>
-              <option value="cancelled">Cancelled</option>
+              <option value="available">available</option>
+              <option value="full-booked">full-booked</option>
+              <option value="reserved">reserved</option>
+              <option value="cancelled">cancelled</option>
             </select>
           </label>
         </div>
@@ -162,6 +165,34 @@ const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
             />
           </label>
         </div>
+        <div>
+          <label className="block text-sm font-semibold text-gray-600">
+            Skill Level:
+            <select
+              name="skillLevel"
+              value={activityData.skillLevel}
+              onChange={handleChange}
+              className="form_input"
+            >
+              <option value="beginner">Beginner</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="advanced">Advanced</option>
+            </select>
+          </label>
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold text-gray-600">
+            Age Group:
+            <input
+              type="text"
+              name="ageGroup"
+              value={activityData.ageGroup}
+              onChange={handleChange}
+              className="form_input"
+            />
+          </label>
+        </div>
 
         <div className="mb-4">
           <label className="block mb-2">Activity Times:</label>
@@ -171,6 +202,7 @@ const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
                 selected={timeSlot.startTime}
                 onChange={(date) => handleTimeChange(date, index, true)}
                 showTimeSelect
+                minDate={new Date()}
                 dateFormat="Pp"
                 className="border p-2 rounded-md"
               />
@@ -178,6 +210,7 @@ const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
                 selected={timeSlot.endTime}
                 onChange={(date) => handleTimeChange(date, index, false)}
                 showTimeSelect
+                minDate={new Date()}
                 dateFormat="Pp"
                 className="border p-2 rounded-md"
               />
@@ -194,7 +227,7 @@ const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
                 ],
               })
             }
-            className="bg-blue-500 text-white py-1 px-2 rounded-md"
+            className="outline_btn"
           >
             Add Time Slot
           </button>
@@ -202,7 +235,7 @@ const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
         <div className="modal-btn flex justify-between">
           <button
             type="submit"
-            className="bg-primary-blue text-white py-2 px-4 rounded-md"
+            className="outline_btn text-white py-2 px-4 rounded-md"
           >
             Add Activity
           </button>

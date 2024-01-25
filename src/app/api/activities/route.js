@@ -8,20 +8,18 @@ export const POST = async (request) => {
     await connectToDB();
 
     const session = getSession();
-    const userId = session?.payload.id;
-    console.log("usersession", session, userId);
+    const userId = session?.payload.userInfo._id;
 
     if (session) {
       const user = await UserModel.findById(userId);
 
-      if (!session && user?.role !== "trainer") {
+      if (!session || (session && user?.role !== "trainer")) {
         return new Response("User not allowed to create an activity", {
           status: 401,
         });
       }
 
       const {
-        creator,
         typeOfActivity,
         location,
         description,
@@ -30,6 +28,8 @@ export const POST = async (request) => {
         capacity,
         price,
         activityStatus,
+        skillLevel,
+        ageGroup,
         imageSrc,
       } = await request.json();
 
@@ -43,13 +43,13 @@ export const POST = async (request) => {
         capacity,
         price,
         activityStatus,
+        skillLevel,
+        ageGroup,
         imageSrc,
       });
 
       await newActivity.populate("creator", "firstName lastName");
       await newActivity.save();
-
-      console.log("activity", newActivity);
 
       return Response.json({
         newActivity,
