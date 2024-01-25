@@ -73,76 +73,84 @@ const ReservationForm = ({ params }) => {
 
   return (
     <>
-      <div className="my-2 text-red-500">
+      <div className="my-4 text-red-500">
         {activity.activityStatus === "full-booked" && (
-          <div className="fully-booked-message">
+          <div className="fully-booked-message bg-red-100 text-red-500 p-3 rounded-md">
             This activity is fully booked. No more reservations are allowed.
           </div>
         )}
       </div>
-      <form onSubmit={handleReservation}>
-        <div>
-          <div className="reservation-details">
-            <label>
+      <form onSubmit={handleReservation} className="max-w-md mx-auto mt-20 ">
+        <div className="bg-white p-6 rounded-md shadow-md">
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
               Number of Persons:
               <input
                 type="number"
                 value={numberOfPersons}
                 onChange={(e) => setNumberOfPersons(e.target.value)}
+                className="mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300"
               />
             </label>
+          </div>
+          <div className="flex justify-between items-center mb-4">
             <div className="price-details">
-              <p>Price:${price}</p>
-              <p>Total: ${price * numberOfPersons}</p>
+              <p className="text-gray-700">Price: ${price}</p>
+              <p className="text-gray-700">Total: ${price * numberOfPersons}</p>
               <div className="spaces">
-                <span> Spaces left:</span>
+                <span className="mr-1">Spaces left:</span>
                 <span
                   className={` ${
                     capacity - activity?.reservations?.length < 5
                       ? "text-red-500"
-                      : "text-grey-500"
+                      : "text-gray-500"
                   }`}
                 >
                   {capacity - activity?.reservations?.length}
                 </span>
               </div>
             </div>
-            <label>
-              Booking Status:
+            <div className="w-1/2">
+              <label className="block text-sm font-medium text-gray-700">
+                Booking Status:
+                <select
+                  value={bookingStatus}
+                  onChange={(e) => setBookingStatus(e.target.value)}
+                  className="mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300"
+                >
+                  <option value="pending">Pending</option>
+                  <option value="confirmed">Confirmed</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
+              Time Slot:
               <select
-                value={bookingStatus}
-                onChange={(e) => setBookingStatus(e.target.value)}
+                value={selectedTimeSlot}
+                onChange={handleTimeSlotChange}
+                className="mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300"
               >
-                <option value="pending">pending</option>
-                <option value="confirmed">confirmed</option>
-                <option value="cancelled">cancelled</option>
+                <option value="" disabled>
+                  Select a time slot
+                </option>
+                {activityTimes &&
+                  activityTimes.map((timeSlot, index) => (
+                    <option key={index} value={timeSlot.startTime}>
+                      {`${new Date(
+                        timeSlot.startTime
+                      ).toLocaleTimeString()} - ${new Date(
+                        timeSlot.endTime
+                      ).toLocaleTimeString()}`}
+                    </option>
+                  ))}
               </select>
             </label>
           </div>
-          <div className="time-slot">
-            <select
-              value={selectedTimeSlot}
-              onChange={handleTimeSlotChange}
-              className="border border-gray-300 p-2 rounded-md"
-            >
-              <option value="" disabled>
-                Select a time slot
-              </option>
-              {activityTimes &&
-                activityTimes.map((timeSlot, index) => (
-                  <option key={index} value={timeSlot.startTime}>
-                    {`${new Date(
-                      timeSlot.startTime
-                    ).toLocaleTimeString()} - ${new Date(
-                      timeSlot.endTime
-                    ).toLocaleTimeString()}`}
-                  </option>
-                ))}
-            </select>
-          </div>
-
           <button
-            className="outline_btn "
+            className="outline_btn"
             disabled={
               numberOfPersons > capacity - activity?.reservations?.length ||
               numberOfPersons < 1 ||

@@ -31,14 +31,16 @@ const page = () => {
   }, []);
 
   return (
-    <>
-      <div className="intro">
-        <p>You are booked for : {typeOfActivity}</p>
-        <p>Date:{formattedTimeSlot.date}</p>
-        <p>Time:{formattedTimeSlot.time}</p>
-        <p>Total: ${total}</p>
-        <p>Number of persons: {numberOfPersons}</p>
-
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="max-w-md p-8 bg-white shadow-md rounded-md">
+        <h1 className="text-2xl font-bold mb-6">Booking Details</h1>
+        <div className="mb-4">
+          <p className="text-gray-700">You are booked for: {typeOfActivity}</p>
+          <p className="text-gray-700">Date: {formattedTimeSlot.date}</p>
+          <p className="text-gray-700">Time: {formattedTimeSlot.time}</p>
+          <p className="text-gray-700">Total: ${total}</p>
+          <p className="text-gray-700">Number of persons: {numberOfPersons}</p>
+        </div>
         <div className="payment">
           <CreditCardForm
             activityId={activityId}
@@ -47,7 +49,7 @@ const page = () => {
           />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

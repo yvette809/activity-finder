@@ -25,21 +25,39 @@ const ActivitiesByTrainer = ({ activities }) => {
       {activitiesByTrainer.length <= 0 && userInfo.role === "trainer" && (
         <p>There are no activities for this Trainer</p>
       )}
-      <div className=" w-full ">
-        {activitiesByTrainer.map((activity) => (
-          <div key={activity._id}>
-            <p>{activity.typeOfActivity}</p>
-            <p>{activity.location}</p>
-
-            {activity.reservations.map((reservation) => (
-              <div className="bg-rose-400" key={reservation}>
-                <Link href={`/reservations/${reservation}`}>
-                  <p>Reservation Id: {reservation}</p>
-                </Link>
-              </div>
-            ))}
-          </div>
-        ))}
+      <div className="w-full">
+        {activitiesByTrainer.length > 0 && (
+          <table className="min-w-full bg-white border border-gray-300 mt-20">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="py-2 px-4 border">Activity Type</th>
+                <th className="py-2 px-4 border">Location</th>
+                <th className="py-2 px-4 border">Reservations</th>
+              </tr>
+            </thead>
+            <tbody>
+              {activitiesByTrainer.map((activity) => (
+                <tr key={activity._id} className="border-b">
+                  <td className="py-2 px-4 border">
+                    {activity.typeOfActivity}
+                  </td>
+                  <td className="py-2 px-4 border">{activity.location}</td>
+                  <td className="py-2 px-4 border">
+                    {activity.reservations.map((reservation) => (
+                      <div className="" key={reservation}>
+                        <Link href={`/reservations/${reservation}`}>
+                          <p className="cursor-pointer text-blue-500 underline">
+                            Reservation Id: {reservation}
+                          </p>
+                        </Link>
+                      </div>
+                    ))}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </>
   );

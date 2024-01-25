@@ -33,10 +33,11 @@ export const GET = async (request, { params }) => {
     const isActivityCreator = activity.creator === userId;
 
     // Check if the user trying to get the reservation is the person who made it
-    const isReservationOwner = reservation.userId._id.toString() === userId;
+    const isReservationOwner = reservation.userId._id === userId;
 
     if (isActivityCreator || isReservationOwner) {
-      return Response.json(reservation, { status: 200 });
+      /* return Response.json(reservation, { status: 200 }); */
+      return new Response(JSON.stringify(reservation), { status: 200 });
     } else {
       return new Response(
         "Unauthorized. You don't have permission to view this reservation.",
@@ -141,5 +142,3 @@ export const DELETE = async (request, { params }) => {
     return new Response("Failed to delete reservation", { status: 500 });
   }
 };
-
-

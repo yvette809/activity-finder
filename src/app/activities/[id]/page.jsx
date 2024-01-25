@@ -59,26 +59,26 @@ const page = ({ params }) => {
 
   return (
     <div className="container mx-auto p-8">
-      <div className="bg-white p-4 rounded-md shadow-md">
+      <div className="bg-white p-8 rounded-md shadow-md">
         {imageSrc && (
           <img
             src={imageSrc}
             alt={`Image for ${
               creator?.firstName && creator.firstName
             }'s activity`}
-            className="w-full h-60 object-cover mb-4 rounded-md"
+            className="w-full h-64 object-cover mb-6 rounded-md shadow-lg"
           />
         )}
-        <h1 className="text-3xl font-bold mb-4">
+        <h1 className="text-4xl font-bold mb-4">
           {typeOfActivity} with {creator?.firstName} {creator?.lastName}
         </h1>
-        <div className="details flex justify-between">
-          <div className="details-specs w-2/3 pr-4">
+        <div className="flex flex-wrap justify-between">
+          <div className="w-full md:w-2/3 pr-4">
             <p className="text-lg font-semibold mb-2">Location: {location}</p>
-            <p className="text-gray-600 mb-2">Description: {description}</p>
-            <p className="text-gray-600 mb-2">Capacity: {capacity} people</p>
+            <p className="text-gray-700 mb-2">Description: {description}</p>
+            <p className="text-gray-700 mb-2">Capacity: {capacity} people</p>
             <p
-              className={`text-gray-600 mb-2 ${
+              className={`text-gray-700 mb-2 ${
                 capacity - activity?.reservations?.length < 5
                   ? "text-red-500"
                   : "text-gray-500"
@@ -86,43 +86,44 @@ const page = ({ params }) => {
             >
               Spaces left: {capacity - activity?.reservations?.length}
             </p>
-            <p className="text-gray-600 mb-2">Price: ${price}</p>
-            <p className="text-gray-600 mb-2">Status: {status}</p>
-            <p className="text-gray-600 mb-2">
+            <p className="text-gray-700 mb-2">Price: ${price}</p>
+            <p className="text-gray-700 mb-2">Status: {status}</p>
+            <p className="text-gray-700 mb-2">
               Skill Level: {skillLevel && skillLevel}
             </p>
-            <p className="text-gray-600 mb-2">
+            <p className="text-gray-700 mb-2">
               Age Group: {ageGroup && ageGroup}
             </p>
 
             <div>
               {activityTimes &&
                 activityTimes.map((timeSlot, index) => (
-                  <div key={index} className="time-slot mb-2">
-                    <p className="text-gray-600">
-                      Date: {new Date(timeSlot.startTime).toDateString()}
+                  <div key={index} className="time-slot mb-4">
+                    <p className="text-gray-700">
+                      Date: {new Date(timeSlot.startTime).toLocaleDateString()}
                     </p>
-                    <p className="text-gray-600">
+                    <p className="text-gray-700">
                       Start Time:{" "}
                       {new Date(timeSlot.startTime).toLocaleTimeString()}
                     </p>
-                    <p className="text-gray-600">
+                    <p className="text-gray-700">
                       End Time:{" "}
                       {new Date(timeSlot.endTime).toLocaleTimeString()}
                     </p>
-                    <p>
-                      <p>
-                        Duration:{" "}
-                        {formatDuration(timeSlot.startTime, timeSlot.endTime)}
-                      </p>
+                    <p className="text-gray-700">
+                      Duration:{" "}
+                      {formatDuration(timeSlot.startTime, timeSlot.endTime)}
                     </p>
                   </div>
                 ))}
             </div>
           </div>
 
-          <div className="book w-1/3">
-            <button className="outline_btn mb-3" onClick={handleActivityBtnClick}>
+          <div className="w-full md:w-1/3 mt-6 md:mt-0">
+            <button
+              className="outline_btn mb-4 md:mb-6"
+              onClick={handleActivityBtnClick}
+            >
               Book Activity
             </button>
             {isAuthenticated &&
@@ -136,7 +137,7 @@ const page = ({ params }) => {
         </div>
       </div>
       {/* Activity reviews will go in here */}
-      {/* edit activity button that will open up a modal */}
+      {/* Edit activity button that will open up a modal */}
     </div>
   );
 };

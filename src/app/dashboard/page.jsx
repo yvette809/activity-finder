@@ -35,14 +35,14 @@ const page = () => {
   return (
     <ClientOnly>
       <>
-        <div>Welcome to Your dashboard {userInfo.firstName}</div>
+        <div className="mt-20">Welcome to Your dashboard {userInfo.firstName}</div>
         {userBookingsLink}
 
         <ActivitiesByTrainer activities={activities} />
         {isAuthenticated && userInfo.role === "trainer" && (
           <button
             onClick={() => setShowModal(true)}
-            className="bg-primary-blue text-white py-2 px-4 rounded-md mt-2"
+            className="outline_btn mt-3"
           >
             Create Activity
           </button>

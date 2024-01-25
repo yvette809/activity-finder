@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -11,12 +9,13 @@ const CreditCardForm = ({ activityId, price, persons }) => {
   const [expirationDate, setExpirationDate] = useState("");
   const [cvv, setCVV] = useState("");
 
-  const submitForm = () => {
+  const submitForm = (e) => {
+    e.preventDefault();
+    console.log("submitted");
     router.push(
       `/confirmation?activityId=${activityId}&price=${price}&persons=${persons}`
     );
   };
-
   return (
     <form className="max-w-md mx-auto mt-8 p-8 border rounded-lg shadow-lg">
       <label
@@ -32,6 +31,7 @@ const CreditCardForm = ({ activityId, price, persons }) => {
         value={cardNumber}
         onChange={(e) => setCardNumber(e.target.value)}
         className="w-full p-2 border rounded"
+        maxLength={16}
         required
       />
 
@@ -85,8 +85,8 @@ const CreditCardForm = ({ activityId, price, persons }) => {
 
       <button
         type="button"
+        className="outline_btn mt-3 hover:cursor-pointer"
         onClick={submitForm}
-        className="mt-6 bg-blue-500 text-white p-2 rounded hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
       >
         Submit
       </button>

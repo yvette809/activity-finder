@@ -91,10 +91,10 @@ export async function getReservationById(id) {
 
     if (!response.ok) {
       throw new Error("Failed to fetch reservation");
-      toast.error("failed to fetch reservation");
     }
 
     const reservation = await response.json();
+    console.log("Response data:", reservation);
     return reservation;
   } catch (error) {
     console.error("Error fetching reservation:", error.message);
