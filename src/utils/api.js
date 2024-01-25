@@ -101,3 +101,22 @@ export async function getReservationById(id) {
     throw error;
   }
 }
+
+// register user
+export const registerUser = async (formData) => {
+  try {
+    const res = await fetch(`${base_url}/api/auth/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (res.ok) {
+      return true;
+    }
+  } catch (error) {
+    console.error("Error registering user:", error);
+  }
+};
