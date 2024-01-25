@@ -378,7 +378,7 @@ const RegisterModal = ({ setShowModal, setShowRegisterModal }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-8 rounded-md shadow-md w-96">
-        <h2 className="text-2xl font-bold mb-4 text-gray-400">Register</h2>
+        <h2 className="text-2xl font-bold mb-4 text-deep-green">Register</h2>
         <form onSubmit={handleRegister} className="text-gray-600 ">
           <div className="mb-4">
             <label
@@ -526,13 +526,13 @@ const RegisterModal = ({ setShowModal, setShowRegisterModal }) => {
           <div className="flex justify-between align-between">
             <button
               type="submit"
-              className="bg-primary-blue text-white p-2 rounded-md cursor-pointer"
+              className="bg-deep-green text-white p-2 rounded-md cursor-pointer"
               disabled={submitting}
             >
               {submitting ? "Submitting..." : "Submit"}
             </button>
             <button
-              className="text-white bg-primary-blue p-2 rounded-md cursor-pointer"
+              className="text-white bg-deep-green p-2 rounded-md cursor-pointer"
               onClick={() => setShowModal(false) || setShowRegisterModal(false)}
             >
               Close

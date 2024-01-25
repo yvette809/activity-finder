@@ -44,7 +44,7 @@ const Nav = () => {
               Logout
             </li>
             {role === "user" && (
-              <Link href={`/my-bookings/${userInfo._id}`}>
+              <Link href={`/reservations/user/${userInfo._id}`}>
                 <li className="cursor-pointer hover:underline">My Bookings</li>
               </Link>
             )}

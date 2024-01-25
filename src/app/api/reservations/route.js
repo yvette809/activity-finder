@@ -14,9 +14,10 @@ export const GET = async (request) => {
     await connectToDB();
 
     // Find all reservations and populate userId and activityId fields
-    const reservations = await ReservationModel.find()
+    const reservations = await ReservationModel.find({})
       .populate("userId")
-      .populate("activityId");
+      .populate("activityId")
+      .exec();
 
     // Filter reservations based on the condition that the current user is the creator
     const userReservations = reservations.filter((reservation) => {
@@ -24,7 +25,7 @@ export const GET = async (request) => {
       return userId.toString() === activityCreatorId;
     });
 
-    return new Response(reservations, { status: 200 });
+    return new Response(userReservations, { status: 200 });
   } catch (error) {
     console.error(error);
     return new Response("Failed to retrieve reservations", { status: 500 });

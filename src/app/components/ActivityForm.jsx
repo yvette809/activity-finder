@@ -227,7 +227,7 @@ const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
                 ],
               })
             }
-            className="bg-blue-500 text-white py-1 px-2 rounded-md"
+            className="outline_btn"
           >
             Add Time Slot
           </button>
@@ -235,7 +235,7 @@ const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
         <div className="modal-btn flex justify-between">
           <button
             type="submit"
-            className="bg-primary-blue text-white py-2 px-4 rounded-md"
+            className="outline_btn text-white py-2 px-4 rounded-md"
           >
             Add Activity
           </button>

@@ -60,22 +60,22 @@ export async function getActivity(id) {
   }
 }
 
-// getUserReservation
 export async function getUserReservations(userId) {
-  const apiUrl = `${base_url}/api/reservations/${userId}`;
+  const apiUrl = `${base_url}/api/reservations/user/${userId}`;
 
   try {
     const response = await fetch(apiUrl);
 
     if (!response.ok) {
-      throw new Error("Failed to fetch reservation");
+      const errorMessage = `Failed to fetch reservation. Status: ${response.status}`;
+      throw new Error(errorMessage);
     }
 
     const reservation = await response.json();
-    console.log("reserve", reserve);
+    console.log("reserve", reservation);
     return reservation;
   } catch (error) {
-    console.error("Error fetching activity:", error.message);
+    console.error("Error fetching reservation:", error.message);
     throw error;
   }
 }

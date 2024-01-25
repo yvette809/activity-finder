@@ -12,8 +12,8 @@ export const GET = async (request, { params }) => {
     const userId = session?.payload.userInfo._id;
 
     const reservation = await ReservationModel.findById(params.id)
-      .populate("userId", "firstName lastName")
-      .populate("activityId");
+       .populate("userId", "firstName lastName")
+      .populate("activityId"); 
 
     // Now reservation.userId and reservation.activityId will be fully populated
 
@@ -35,8 +35,7 @@ export const GET = async (request, { params }) => {
     // Check if the user trying to get the reservation is the person who made it
     const isReservationOwner = reservation.userId._id === userId;
 
-    if (isActivityCreator || isReservationOwner) {
-      /* return Response.json(reservation, { status: 200 }); */
+   /*  if (isActivityCreator || isReservationOwner) {
       return new Response(JSON.stringify(reservation), { status: 200 });
     } else {
       return new Response(
@@ -45,7 +44,10 @@ export const GET = async (request, { params }) => {
           status: 401,
         }
       );
-    }
+    } */
+     if (session) {
+      return new Response(JSON.stringify(reservation), { status: 200 });
+    } 
   } catch (error) {
     console.error(error);
     return new Response("Error retrieving reservation", { status: 500 });

@@ -27,34 +27,38 @@ const page = () => {
   }, []);
 
   const userBookingsLink = isAuthenticated && userInfo.role === "user" && (
-    <Link href={`/my-bookings/${userInfo._id}`}>
-      <button className="bg-primary-blue">Go to Your Bookings</button>
+    <Link href={`/reservations/user/${userInfo._id}`}>
+      <button className="outline_btn ">Go to Your Bookings</button>
     </Link>
   );
 
   return (
     <ClientOnly>
       <>
-        <div className="mt-20">Welcome to Your dashboard {userInfo.firstName}</div>
-        {userBookingsLink}
+        <div className="mx-20 mt-20">
+          <div className="mt-20 ">
+            Welcome to Your dashboard {userInfo.firstName}
+          </div>
+          {userBookingsLink}
 
-        <ActivitiesByTrainer activities={activities} />
-        {isAuthenticated && userInfo.role === "trainer" && (
-          <button
-            onClick={() => setShowModal(true)}
-            className="outline_btn mt-3"
-          >
-            Create Activity
-          </button>
-        )}
+          <ActivitiesByTrainer activities={activities} />
+          {isAuthenticated && userInfo.role === "trainer" && (
+            <button
+              onClick={() => setShowModal(true)}
+              className="outline_btn mt-3"
+            >
+              Create Activity
+            </button>
+          )}
 
-        {showModal && (
-          <ActivityForm
-            isAuthenticated={isAuthenticated}
-            userInfo={userInfo}
-            setShowModal={setShowModal}
-          />
-        )}
+          {showModal && (
+            <ActivityForm
+              isAuthenticated={isAuthenticated}
+              userInfo={userInfo}
+              setShowModal={setShowModal}
+            />
+          )}
+        </div>
       </>
     </ClientOnly>
   );
