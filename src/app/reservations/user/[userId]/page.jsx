@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getUserReservations } from "@/utils/api";
 import { formatTime } from "@/utils/formatTime";
 import ReservationList from "@/app/components/ReservationList";
+import Link from "next/link"
 
 const Page = ({ params }) => {
   const [reservations, setReservations] = useState([]);
@@ -17,10 +18,16 @@ const Page = ({ params }) => {
     getReservations();
   }, [params.userId]);
 
-  console.log("reservationsofuser", reservations);
+ 
 
   return (
-    <div>
+    <>
+      {reservations.length === 0 && (
+        <>
+        <p className="text-2xl mt-20 text-center">You have not made any reservation yet!</p>
+        <Link href="/"><button className="outline_btn">Go Back</button></Link>
+        </>
+      )}
       {reservations.map((reservation) => (
         <>
           <h1 className="text-2xl font-bold mb-4 mt-20">
@@ -30,7 +37,7 @@ const Page = ({ params }) => {
           <ReservationList reservation={reservation} />
         </>
       ))}
-    </div>
+    </>
   );
 };
 
