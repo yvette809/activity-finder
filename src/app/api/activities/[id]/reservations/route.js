@@ -92,7 +92,7 @@ const handleReservation = async (
       userId,
       activityId: activity.id,
       numberOfPersons,
-      bookingStatus,
+      bookingStatus: "confirmed",
     });
 
     await newReservation.save();
@@ -104,10 +104,9 @@ const handleReservation = async (
     await ActivityModel.findByIdAndUpdate(activity.id, {
       $push: { reservations: newReservation },
       $inc: { capacity: -numberOfPersons },
-      activityStatus: "reserved",
+      activityStatus:
+        activity.capacity - numberOfPersons === 0 ? "full-booked" : "available",
     });
-
-    console.log("New reservation", newReservation);
 
     return newReservation;
   } catch (error) {
