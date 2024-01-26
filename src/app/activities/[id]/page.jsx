@@ -84,7 +84,26 @@ const page = ({ params }) => {
                   : "text-gray-500"
               }`}
             >
-              Spaces left: {capacity - activity?.reservations?.length}
+              <div className="spaces">
+                {activity.activityStatus === "full-booked" ? (
+                  <span className="text-red-500">
+                    Not Available! Full-booked
+                  </span>
+                ) : (
+                  <>
+                    <span className="mr-1">Spaces left:</span>
+                    <span
+                      className={`${
+                        capacity - activity?.reservations?.length < 5
+                          ? "text-red-500"
+                          : "text-gray-500"
+                      }`}
+                    >
+                      {Math.max(0, capacity - activity?.reservations?.length)}
+                    </span>
+                  </>
+                )}
+              </div>
             </p>
             <p className="text-gray-700 mb-2">Price: ${price}</p>
             <p className="text-gray-700 mb-2">Status: {status}</p>
@@ -104,11 +123,17 @@ const page = ({ params }) => {
                     </p>
                     <p className="text-gray-700">
                       Start Time:{" "}
-                      {new Date(timeSlot.startTime).toLocaleTimeString()}
+                      {new Date(timeSlot.startTime).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </p>
                     <p className="text-gray-700">
                       End Time:{" "}
-                      {new Date(timeSlot.endTime).toLocaleTimeString()}
+                      {new Date(timeSlot.endTime).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </p>
                     <p className="text-gray-700">
                       Duration:{" "}
@@ -121,7 +146,12 @@ const page = ({ params }) => {
 
           <div className="w-full md:w-1/3 mt-6 md:mt-0">
             <button
-              className="outline_btn mb-4 md:mb-6"
+              disabled={activity.activityStatus === "full-booked"}
+              className={`outline_btn mb-4 md:mb-6 ${
+                activity.activityStatus === "full-booked"
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
+              }`}
               onClick={handleActivityBtnClick}
             >
               Book Activity

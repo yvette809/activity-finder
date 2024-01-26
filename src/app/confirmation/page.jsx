@@ -14,7 +14,10 @@ const Page = () => {
       <p className="text-2xl font-bold mb-4 text-center">
         Thanks for choosing this activity!
       </p>
-      <Link href={`/reservations/user/${userInfo._id}`} className="outline_btn">
+      <Link
+        href={`/reservations/user/${userInfo?._id}`}
+        className="outline_btn"
+      >
         My Bookings
       </Link>
     </div>

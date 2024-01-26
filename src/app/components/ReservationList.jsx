@@ -33,6 +33,10 @@ const ReservationList = ({ reservation }) => {
         <p className="text-gray-600 mb-2">
           Time: {formatTime(reservation.createdAt).time}h
         </p>
+        <p className="text-lg font-semibold mb-2">
+          Booking status:{" "}
+          {reservation.bookingStatus && reservation.bookingStatus}
+        </p>
       </div>
     </div>
   );

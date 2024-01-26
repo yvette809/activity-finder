@@ -15,7 +15,7 @@ const ReservationForm = ({ params }) => {
   const [activity, setActivity] = useState({});
   const [selectedTimeSlot, setSelectedTimeSlot] = useState("");
 
-  const { price, capacity, activityTimes } = activity;
+  const { price, capacity, activityTimes, activityStatus } = activity;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,9 +31,8 @@ const ReservationForm = ({ params }) => {
   };
 
   const handleReservation = async (e) => {
-    e.preventDefault(); // Prevent the default form submission
+    e.preventDefault();
 
-    // Check if the number of persons is less than 1 or if the price is negative
     if (numberOfPersons < 1 || (price !== undefined && price < 0)) {
       console.error("Invalid number of persons or negative price");
       return;
@@ -56,13 +55,12 @@ const ReservationForm = ({ params }) => {
         );
 
         if (response.ok) {
-          // Reservation successful
           console.log("details", bookingStatus, numberOfPersons);
+          setBookingStatus("confirmed");
           router.push(
             `/payment?activityId=${activityId}&bookingStatus=${bookingStatus}&numberOfPersons=${numberOfPersons}&selectedTimeSlot=${selectedTimeSlot}`
           );
         } else {
-          // Handle errors
           console.error("Reservation failed:", await response.statusText);
         }
       } catch (error) {
@@ -74,13 +72,13 @@ const ReservationForm = ({ params }) => {
   return (
     <>
       <div className="my-4 text-red-500">
-        {activity.activityStatus === "full-booked" && (
+        {activityStatus === "full-booked" && (
           <div className="fully-booked-message bg-red-100 text-red-500 p-3 rounded-md">
             This activity is fully booked. No more reservations are allowed.
           </div>
         )}
       </div>
-      <form onSubmit={handleReservation} className="max-w-md mx-auto mt-20 ">
+      <form onSubmit={handleReservation} className="max-w-md mx-auto mt-10 ">
         <div className="bg-white p-6 rounded-md shadow-md">
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
@@ -88,7 +86,17 @@ const ReservationForm = ({ params }) => {
               <input
                 type="number"
                 value={numberOfPersons}
-                onChange={(e) => setNumberOfPersons(e.target.value)}
+                onChange={(e) => {
+                  const newValue = parseInt(e.target.value, 10);
+                  if (
+                    !isNaN(newValue) &&
+                    newValue >= 0 &&
+                    newValue <= capacity
+                  ) {
+                    setNumberOfPersons(newValue);
+                  }
+                }}
+                /*   onChange={(e) => setNumberOfPersons(e.target.value)} */
                 className="mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300"
               />
             </label>
@@ -101,12 +109,12 @@ const ReservationForm = ({ params }) => {
                 <span className="mr-1">Spaces left:</span>
                 <span
                   className={` ${
-                    capacity - activity?.reservations?.length < 5
+                    capacity - numberOfPersons < 5
                       ? "text-red-500"
                       : "text-gray-500"
                   }`}
                 >
-                  {capacity - activity?.reservations?.length}
+                  {Math.max(0, capacity - numberOfPersons)}
                 </span>
               </div>
             </div>
@@ -150,11 +158,17 @@ const ReservationForm = ({ params }) => {
             </label>
           </div>
           <button
-            className="outline_btn"
-            disabled={
-              numberOfPersons > capacity - activity?.reservations?.length ||
+            className={`outline_btn ${
+              numberOfPersons > capacity ||
               numberOfPersons < 1 ||
-              activity.activityStatus === "full-booked"
+              activityStatus === "full-booked"
+                ? "cursor-not-allowed opacity-50"
+                : ""
+            }`}
+            disabled={
+              numberOfPersons > capacity ||
+              numberOfPersons < 1 ||
+              activityStatus === "full-booked"
             }
             type="submit"
           >

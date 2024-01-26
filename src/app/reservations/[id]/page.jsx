@@ -46,31 +46,7 @@ const page = ({ params }) => {
       <div className="max-w-screen-sm mx-auto p-6 bg-white rounded-md shadow-md">
         {reservation ? (
           <>
-          <ReservationList reservation={reservation}/>
-            {/* <div className="flex items-center mb-4">
-              <span className="font-bold mr-2">
-                Name: {reservation.userId.firstName}{" "}
-                {reservation.userId.lastName}
-              </span>
-            </div>
-            <p> Activity Id : {reservation?.activityId._id}</p>
-            <p className="text-lg font-semibold">
-              Price of Activity: {reservation.activityId.price}
-            </p>
-            <p className="text-lg font-semibold mb-2">
-              Number of Persons: {reservation.numberOfPersons}
-            </p>
-            <p>
-              Total price:{" "}
-              {reservation.activityId.price * reservation.numberOfPersons}
-            </p>
-            <p className="text-lg font-semibold">
-              Activity Name: {reservation.activityId.typeOfActivity}
-            </p>
-            <div>
-              <p className="text-gray-600 mb-2">Date: {formattedTime.date}</p>
-              <p className="text-gray-600 mb-2">Time: {formattedTime.time}</p>
-            </div> */}
+            <ReservationList reservation={reservation} />
           </>
         ) : (
           <p className="text-lg font-semibold">Loading reservation...</p>
