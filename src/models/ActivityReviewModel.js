@@ -14,6 +14,12 @@ const ActivityReviewSchema = new Schema(
       ref: "User",
       required: true,
     },
+   /*  activityId: {
+      type: Schema.Types.ObjectId,
+      ref: "Activity",
+      required: true,
+    }, */
+    
   },
   { timestamps: true }
 );

@@ -10,13 +10,13 @@ import jwt from "jsonwebtoken";
 const page = ({ params }) => {
   const isAuthenticated = getAuthToken();
   const decodedToken = jwt.decode(isAuthenticated);
-  const userInfo = decodedToken?.userInfo || {};
+  const userInfo = decodedToken?.userInfo;
 
   const [reservation, setReservation] = useState(null);
 
   const formattedTime = formatTime(reservation?.createdAt);
 
-  console.log("reservation", reservation);
+
 
   useEffect(() => {
     const fetchReservation = async () => {
@@ -29,17 +29,19 @@ const page = ({ params }) => {
       }
     };
 
-    if (isAuthenticated) {
+     if (isAuthenticated) {
       fetchReservation();
-    }
+    } 
 
-    /* if (
+   /*  if (
       userInfo._id === reservation?.activityId?.creator ||
       userInfo._id === reservation?.userId._id
     ) {
       fetchReservation();
     } */
   }, [params.id]);
+
+  console.log("reservation", reservation, userInfo);
 
   return (
     <div className="flex justify-center items-center h-screen">

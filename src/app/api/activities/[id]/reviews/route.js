@@ -8,7 +8,7 @@ export const POST = async (request, { params }) => {
     await connectToDB();
 
     const session = getSession();
-    const userId = session?.payload.id;
+    const userId = session?.payload.userInfo._id;
 
     if (!session) {
       return new Response("Unauthorized", { status: 401 });

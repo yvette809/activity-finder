@@ -15,8 +15,6 @@ export const GET = async (request, { params }) => {
       .populate("userId", "firstName lastName")
       .populate("activityId");
 
-    // Now reservation.userId and reservation.activityId will be fully populated
-
     if (!reservation) {
       return new Response(`Reservation with id ${params.id} not found`, {
         status: 404,
@@ -24,18 +22,19 @@ export const GET = async (request, { params }) => {
     }
 
     const activity = await ActivityModel.findById(reservation.activityId);
+    console.log("activity", activity);
 
     if (!activity) {
       return new Response("Associated activity not found", { status: 404 });
     }
 
-    // Check if the user trying to get the reservation is the creator of the activity
-    const isActivityCreator = activity.creator === userId;
+    /*   // Check if the user trying to get the reservation is the creator of the activity
+    const isActivityCreator = activity.creator._id.toString() === userId;
 
     // Check if the user trying to get the reservation is the person who made it
-    const isReservationOwner = reservation.userId._id === userId;
+    const isReservationOwner = reservation.userId._id.toString() === userId;
 
-    /*  if (isActivityCreator || isReservationOwner) {
+      if (isActivityCreator || isReservationOwner) {
       return new Response(JSON.stringify(reservation), { status: 200 });
     } else {
       return new Response(
@@ -44,7 +43,7 @@ export const GET = async (request, { params }) => {
           status: 401,
         }
       );
-    } */
+    }  */
     if (session) {
       return new Response(JSON.stringify(reservation), { status: 200 });
     }
@@ -95,66 +94,6 @@ export const PATCH = async (request, { params }) => {
   }
 };
 
-/* // delete reservation
-export const DELETE = async (request, { params }) => {
-  try {
-    await connectToDB();
-    const session = getSession();
-    const userId = session?.payload.userInfo._id;
-
-    if (!session) {
-      return new Response("Unauthorized", { status: 401 });
-    }
-
-    // Fetch the reservation from the database
-    const reservation = await ReservationModel.findById(params.id).populate(
-      "userId"
-    );
-
-    const activity = await ActivityModel.findById(
-      reservation.activityId._id
-    ).populate("creator");
-
-    if (!activity) {
-      return new Response("Activity not found", { status: 404 });
-    }
-
-    // Check if the user trying to delete the reservation is the creator of the activity
-    const isActivityCreator = activity.creator._id.toString() === userId;
-
-    // Check if the user trying to delete the reservation is the owner of the reservation
-    const isReservationOwner = reservation?.userId?._id.toString() === userId;
-    console.log("isReservationOwner", isReservationOwner);
-
-    if (isActivityCreator || isReservationOwner) {
-      await ReservationModel.findByIdAndDelete(params.id);
-      reservation.bookingStatus === "cancelled";
-      activity.capacity += reservation.numberOfPersons;
-
-      return new Response("Reservation deleted successfully", { status: 200 });
-    } else {
-      return new Response(
-        "Unauthorized. You don't have permission to delete this reservation.",
-        {
-          status: 401,
-        }
-      );
-    }
-  } catch (error) {
-    console.error(error);
-
-    if (error.name === "CastError" && error.kind === "ObjectId") {
-      return new Response(`Invalid ID format for reservation: ${params.id}`, {
-        status: 400,
-      });
-    }
-
-    return new Response("Failed to delete reservation", { status: 500 });
-  }
-};
- */
-
-
 // delete reservation
 export const DELETE = async (request, { params }) => {
   try {
@@ -195,6 +134,9 @@ export const DELETE = async (request, { params }) => {
 
       // Update the reservation status
       reservation.bookingStatus = "cancelled";
+      if (activity.activityStatus === "full-booked") {
+        activity.activityStatus = "available";
+      }
       await reservation.save();
 
       // Delete the reservation

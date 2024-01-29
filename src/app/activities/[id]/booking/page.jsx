@@ -55,8 +55,10 @@ const ReservationForm = ({ params }) => {
         );
 
         if (response.ok) {
+          //const data = await response.json();
           console.log("details", bookingStatus, numberOfPersons);
           setBookingStatus("confirmed");
+
           router.push(
             `/payment?activityId=${activityId}&bookingStatus=${bookingStatus}&numberOfPersons=${numberOfPersons}&selectedTimeSlot=${selectedTimeSlot}`
           );
@@ -109,12 +111,12 @@ const ReservationForm = ({ params }) => {
                 <span className="mr-1">Spaces left:</span>
                 <span
                   className={` ${
-                    capacity - numberOfPersons < 5
+                    capacity - activity?.reservations?.length < 5
                       ? "text-red-500"
                       : "text-gray-500"
                   }`}
                 >
-                  {Math.max(0, capacity - numberOfPersons)}
+                  {Math.max(0, capacity - activity?.reservations?.length)}
                 </span>
               </div>
             </div>

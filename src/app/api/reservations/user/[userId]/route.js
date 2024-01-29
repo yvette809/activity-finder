@@ -48,6 +48,7 @@ import mongoose from "mongoose";
 // Get reservations by user ID
 export const GET = async (req, { params }) => {
   const userId = await params.userId;
+  console.log("userid", userId);
 
   try {
     await connectToDB();
