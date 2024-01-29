@@ -2,7 +2,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { getActivity } from "@/utils/api";
-import ReviewForm from "@/app/components/ReviewForm";
+import ReviewForm from "@/app/components/reviews/ReviewForm";
+import StarRating from "@/app/components/reviews/StarRating";
 import { useRouter } from "next/navigation";
 import { getAuthToken } from "@/utils/auth";
 import { formatDuration } from "@/utils/formatTime";
@@ -171,7 +172,7 @@ const page = ({ params }) => {
                 userInfo?.role === "trainer" &&
                 creator?._id === userInfo?._id && (
                   <Link href={`/activity/${_id}`}>
-                    <button className="blue_btn">Edit Activity</button>
+                    <button className="blue_btn" >Edit Activity</button>
                   </Link>
                 )}
             </div>
@@ -186,6 +187,7 @@ const page = ({ params }) => {
         )}
         {activity?.reviews?.map((review) => (
           <div key={review._id} className="border p-4 mb-4">
+            <h2 className="text-center text-2xl  font-bolder">Reviews</h2>
             <p className="font-semibold text-lg mb-2">
               {review.userId.firstName} {review.userId.lastName}
             </p>
@@ -194,7 +196,10 @@ const page = ({ params }) => {
               alt="user review"
               className="w-12 h-12 rounded-full mb-2"
             />
-            <p className="mb-2">Rating: {review.rating}</p>
+            <div className="w-full md:w-2/3 pr-4">
+              <p className="mb-2">Rating: {review?.rating}</p>
+              <StarRating rating={review?.rating || 0} />
+            </div>
             <p>{review.comment}</p>
           </div>
         ))}
