@@ -4,10 +4,16 @@ import { useEffect, useState } from "react";
 import { getUserReservations } from "@/utils/api";
 import { formatTime } from "@/utils/formatTime";
 import ReservationList from "@/app/components/ReservationList";
-import Link from "next/link"
+import { getAuthToken } from "@/utils/auth";
+import jwt from "jsonwebtoken";
+import Link from "next/link";
 
 const Page = ({ params }) => {
   const [reservations, setReservations] = useState([]);
+
+  let authToken = getAuthToken();
+  const decodedToken = jwt.decode(authToken);
+  const userInfo = decodedToken?.userInfo || {};
 
   useEffect(() => {
     const getReservations = async () => {
@@ -18,14 +24,16 @@ const Page = ({ params }) => {
     getReservations();
   }, [params.userId]);
 
- 
-
   return (
     <>
       {reservations.length === 0 && (
         <>
-        <p className="text-2xl mt-20 text-center">You have not made any reservation yet!</p>
-        <Link href="/"><button className="outline_btn">Go Back</button></Link>
+          <p className="text-2xl mt-20 text-center">
+            You have not made any reservation yet!
+          </p>
+          <Link href="/">
+            <button className="outline_btn">Go Back</button>
+          </Link>
         </>
       )}
       {reservations.map((reservation) => (
@@ -34,7 +42,7 @@ const Page = ({ params }) => {
             Hello, {reservation?.userId.firstName}! You have made the following
             reservation(s):
           </h1>
-          <ReservationList reservation={reservation} />
+          <ReservationList reservation={reservation} user={userInfo} />
         </>
       ))}
     </>

@@ -142,3 +142,25 @@ export const deleteActivity = async (activityId) => {
     console.error("Error deleting activity", error);
   }
 };
+
+
+// cancel reservation
+
+export const cancelReservation = async (reservationId) => {
+  try {
+    const response = await fetch(`${base_url}/api/reservations/${reservationId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      toast.success("reservation sucessfully cancelled");
+    } else {
+      console.error("Failed to cancel reservation");
+    }
+  } catch (error) {
+    console.error("Error deleting activity", error);
+  }
+};

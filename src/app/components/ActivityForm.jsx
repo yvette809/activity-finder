@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { toast } from "react-hot-toast";
 
 const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
   const router = useRouter();
@@ -65,7 +66,7 @@ const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
 
         if (response.ok) {
           // Handle success
-          console.log("Activity created successfully");
+          toast.success("Activity created successfully");
           router.push("/");
         } else {
           // Handle errors

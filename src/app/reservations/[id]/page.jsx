@@ -46,7 +46,10 @@ const page = ({ params }) => {
       <div className="max-w-screen-sm mx-auto p-6 bg-white rounded-md shadow-md">
         {reservation ? (
           <>
-            <ReservationList reservation={reservation} />
+            <ReservationList
+              reservation={reservation && reservation}
+              user={userInfo}
+            />
           </>
         ) : (
           <p className="text-lg font-semibold">Loading reservation...</p>

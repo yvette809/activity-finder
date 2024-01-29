@@ -57,6 +57,9 @@ const ActivitiesByTrainer = ({ activities }) => {
                   <td className="py-2 px-4 border">
                     <button
                       onClick={() => {
+                        window.confirm(
+                          "Are you sure you want to delete this activity"
+                        );
                         deleteActivity(activity?._id);
                         router.push("/");
                       }}
