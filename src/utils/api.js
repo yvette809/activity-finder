@@ -1,3 +1,5 @@
+import { toast } from "react-hot-toast";
+
 const base_url = "http://localhost:3000";
 
 // get all activities
@@ -13,6 +15,7 @@ export async function getActivities() {
     }
 
     const activities = await response.json();
+
     return activities;
   } catch (error) {
     console.error("Error fetching activities:", error.message);
@@ -80,9 +83,7 @@ export async function getUserReservations(userId) {
   }
 }
 
-//get all reservations
-
-// get all reservations
+// get reservation by id
 export async function getReservationById(id) {
   const apiUrl = `${base_url}/api/reservations/${id}`;
 
@@ -118,5 +119,26 @@ export const registerUser = async (formData) => {
     }
   } catch (error) {
     console.error("Error registering user:", error);
+  }
+};
+
+// delete activity
+
+export const deleteActivity = async (activityId) => {
+  try {
+    const response = await fetch(`${base_url}/api/activities/${activityId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      toast.success("Activity deleted sucessfully");
+    } else {
+      console.error("Failed to delete activity");
+    }
+  } catch (error) {
+    console.error("Error deleting activity", error);
   }
 };

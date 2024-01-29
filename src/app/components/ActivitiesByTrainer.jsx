@@ -1,11 +1,14 @@
 "use client";
 
-import React from "react";
+import { useState } from "react";
 import { getAuthToken } from "@/utils/auth";
+import { deleteActivity } from "@/utils/api";
 import jwt from "jsonwebtoken";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const ActivitiesByTrainer = ({ activities }) => {
+  const router = useRouter();
   const authToken = getAuthToken();
   const decodedToken = jwt.decode(authToken);
   const userInfo = decodedToken?.userInfo || {};
@@ -17,8 +20,6 @@ const ActivitiesByTrainer = ({ activities }) => {
       return activity.creator._id === userInfo._id;
     });
   }
-
-  console.log("activities", activities);
 
   return (
     <>
@@ -52,6 +53,17 @@ const ActivitiesByTrainer = ({ activities }) => {
                         </Link>
                       </div>
                     ))}
+                  </td>
+                  <td className="py-2 px-4 border">
+                    <button
+                      onClick={() => {
+                        deleteActivity(activity?._id);
+                        router.push("/");
+                      }}
+                      className="text-red-500"
+                    >
+                      X
+                    </button>
                   </td>
                 </tr>
               ))}

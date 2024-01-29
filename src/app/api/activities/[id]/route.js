@@ -73,9 +73,8 @@ export const PATCH = async (request, { params }) => {
 export const DELETE = async (request, { params }) => {
   try {
     await connectToDB();
-    const reqBody = await request.json();
     const session = getSession();
-    const userId = session?.payload.id;
+    const userId = session?.payload.userInfo._id;
 
     if (!session) {
       return new Response("Unauthorized", { status: 401 });
@@ -94,7 +93,7 @@ export const DELETE = async (request, { params }) => {
       });
     }
 
-    await ActivityModel.findByIdAndRemove(params.id);
+    await ActivityModel.findByIdAndDelete(params.id);
 
     return new Response("activity deleted successfully", { status: 200 });
   } catch (error) {
