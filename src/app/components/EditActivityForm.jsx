@@ -1,4 +1,4 @@
-// Import React
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getAuthToken } from "@/utils/auth";
@@ -6,9 +6,10 @@ import jwt from "jsonwebtoken";
 import DatePicker from "react-datepicker";
 import { getActivity } from "@/utils/api";
 import "react-datepicker/dist/react-datepicker.css";
+import { toast } from "react-hot-toast";
 
 // Component
-const EditActivityForm = ({ setShowModal, activityId }) => {
+const EditActivityForm = ({ setShowModal, activityId, setActivity }) => {
   const isAuthenticated = getAuthToken();
   const decodedToken = jwt.decode(isAuthenticated);
   const userInfo = decodedToken?.userInfo || {};
@@ -89,7 +90,10 @@ const EditActivityForm = ({ setShowModal, activityId }) => {
         );
 
         if (response.ok) {
-          console.log("Activity updated successfully");
+          const updatedActivity = await response.json();
+          toast.success("Activity updated successfully");
+          setShowModal(false);
+          setActivity(updatedActivity);
         } else {
           console.error("Failed to update activity:", await response.text());
         }
@@ -100,7 +104,8 @@ const EditActivityForm = ({ setShowModal, activityId }) => {
   };
 
   return (
-    <div className="max-w-md mx-auto my-8 p-4 bg-white shadow-md rounded-md ">
+    <div className="absolute top-0 left-0 w-full h-full z-20">
+    <div className="relative max-w-md mx-auto my-8 p-4 bg-white shadow-md rounded-md w-full h-full">
       <h2>Edit Activity</h2>
       <form onSubmit={handleSubmit} className="w-full">
         <label className="block mb-2">
@@ -229,14 +234,14 @@ const EditActivityForm = ({ setShowModal, activityId }) => {
                       onChange={(date) => handleTimeChange(date, index, true)}
                       showTimeSelect
                       dateFormat="Pp"
-                      className="border p-2 rounded-md"
+                      className="border p-2 rounded-md max-w-[150px]"
                     />
                     <DatePicker
                       selected={timeSlot.endTime}
                       onChange={(date) => handleTimeChange(date, index, false)}
                       showTimeSelect
                       dateFormat="Pp"
-                      className="border p-2 rounded-md"
+                      className="border p-2 rounded-md max-w-[150px]"
                     />
                   </>
                 )}
@@ -253,22 +258,20 @@ const EditActivityForm = ({ setShowModal, activityId }) => {
                 ],
               })
             }
-            className="bg-blue-500 text-white py-1 px-2 rounded-md"
+            className="bg-dark-green-500 text-white py-1 px-2 rounded-md"
           >
             Add Time Slot
           </button>
         </div>
 
-        <div className="flex justify-between">
-          <button
-            type="submit"
-            className="bg-primary-blue text-white py-2 px-4 rounded-md"
-          >
+        <div className="flex justify-end pb-8 ">
+          <button type="submit" className="outline_btn ">
             Update Activity
           </button>
         </div>
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}
+    </div>
     </div>
   );
 };

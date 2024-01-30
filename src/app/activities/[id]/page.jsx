@@ -67,7 +67,7 @@ const page = ({ params }) => {
 
   return (
     <>
-      <form className="container mx-auto p-8" onSubmit={handleActivityBtnClick}>
+      <div className="container mx-auto p-8 z-5 relative">
         <div className="bg-white p-8 rounded-md shadow-md">
           {imageSrc && (
             <img
@@ -159,14 +159,13 @@ const page = ({ params }) => {
 
             <div className="w-full md:w-1/3 mt-6 md:mt-0">
               <button
-                type="submit"
                 disabled={activity.activityStatus === "full-booked"}
                 className={`outline_btn mb-4 md:mb-6 ${
                   activity.activityStatus === "full-booked"
                     ? "opacity-50 cursor-not-allowed"
                     : ""
                 }`}
-                /*  onClick={handleActivityBtnClick} */
+                onClick={handleActivityBtnClick}
               >
                 Book Activity
               </button>
@@ -181,8 +180,9 @@ const page = ({ params }) => {
                 userInfo?.role === "trainer" &&
                 creator?._id === userInfo?._id && (
                   <button
-                    className="blue_btn"
+                    className="green_btn"
                     onClick={() => setShowEditModal(true)}
+                    setActivity={setActivity}
                   >
                     Edit Activity
                   </button>
@@ -190,8 +190,8 @@ const page = ({ params }) => {
             </div>
           </div>
         </div>
-      </form>
-      <div className="reviews mt-8">
+      </div>
+      <div className="reviews mt-8 flex justify-center">
         {activity?.reviews?.length <= 0 && (
           <p className="text-gray-700">
             There are no reviews for this activity
@@ -224,7 +224,7 @@ const page = ({ params }) => {
           setShowModal={setShowModal}
         />
       )}
-      <div className="p-20">
+      <div className="p-20 flex justify-center">
         <button onClick={() => setShowModal(true)} className="outline_btn">
           Add Review
         </button>
