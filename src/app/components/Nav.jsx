@@ -44,9 +44,16 @@ const Nav = () => {
               Logout
             </li>
             {role === "user" && (
-              <Link href={`/reservations/user/${userInfo._id}`}>
-                <li className="cursor-pointer hover:underline">My Bookings</li>
-              </Link>
+              <>
+                <Link href={`/reservations/user/${userInfo._id}`}>
+                  <li className="cursor-pointer hover:underline">
+                    My Bookings
+                  </li>
+                </Link>
+                <Link href="/trainers">
+                  <li className="cursor-pointer hover:underline">Trainers</li>
+                </Link>
+              </>
             )}
 
             {role === "trainer" && (
@@ -54,8 +61,8 @@ const Nav = () => {
                 <Link href="/dashboard">
                   <li className="cursor-pointer hover:underline">Dashboard</li>
                 </Link>
-                <Link href="/my-profile">
-                  <li className="cursor-pointer hover:underline">Profile</li>
+                <Link href="/trainers">
+                  <li className="cursor-pointer hover:underline">Trainers</li>
                 </Link>
               </>
             )}
