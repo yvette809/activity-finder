@@ -7,11 +7,11 @@ import connectToDB from "@/utils/connectDB";
 export const GET = async (request, { params }) => {
   try {
     await connectToDB();
-    /* const activity = await ActivityModel.findById(params.id)
+     const activity = await ActivityModel.findById(params.id)
       .populate("creator")
-      .populate("reviews"); */
-
-    const activity = await ActivityModel.findById(params.id)
+      /* .populate("reviews"); */
+ 
+   /*  const activity = await ActivityModel.findById(params.id)
       .populate("creator")
       .populate({
         path: "reviews",
@@ -19,7 +19,7 @@ export const GET = async (request, { params }) => {
           path: "userId",
           model: "User", // This should match the model name for your User
         },
-      });
+      }); */
 
     if (!activity) {
       return new Response(`Activity with id ${params.id} not found`, {

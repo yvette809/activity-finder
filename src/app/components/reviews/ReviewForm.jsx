@@ -46,6 +46,8 @@ const ReviewForm = ({ activityId, user, setShowModal }) => {
           <div>
             <label className="block text-sm font-semibold">Rating:</label>
             <input
+            max={5}
+            min={0}
               type="number"
               value={rating}
               onChange={(e) => setRating(parseInt(e.target.value, 10))}

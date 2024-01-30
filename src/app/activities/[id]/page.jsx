@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { getActivity } from "@/utils/api";
 import ReviewForm from "@/app/components/reviews/ReviewForm";
+import EditActivityForm from "@/app/components/EditActivityForm";
 import StarRating from "@/app/components/reviews/StarRating";
 import { useRouter } from "next/navigation";
 import { getAuthToken } from "@/utils/auth";
@@ -12,6 +13,7 @@ import jwt from "jsonwebtoken";
 const page = ({ params }) => {
   const [activity, setActivity] = useState({});
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const isAuthenticated = getAuthToken();
   const decodedToken = jwt.decode(isAuthenticated);
   const userInfo = decodedToken?.userInfo || {};
@@ -168,12 +170,22 @@ const page = ({ params }) => {
               >
                 Book Activity
               </button>
+
+              {showEditModal && (
+                <EditActivityForm
+                  setShowModal={setShowEditModal}
+                  activityId={activity._id}
+                />
+              )}
               {isAuthenticated &&
                 userInfo?.role === "trainer" &&
                 creator?._id === userInfo?._id && (
-                  <Link href={`/activity/${_id}`}>
-                    <button className="blue_btn" >Edit Activity</button>
-                  </Link>
+                  <button
+                    className="blue_btn"
+                    onClick={() => setShowEditModal(true)}
+                  >
+                    Edit Activity
+                  </button>
                 )}
             </div>
           </div>

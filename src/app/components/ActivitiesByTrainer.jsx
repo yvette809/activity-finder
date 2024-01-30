@@ -40,8 +40,11 @@ const ActivitiesByTrainer = ({ activities }) => {
               {activitiesByTrainer.map((activity) => (
                 <tr key={activity._id} className="border-b">
                   <td className="py-2 px-4 border">
-                    {activity.typeOfActivity}
+                    <Link href={`/activities/${activity._id}`}>
+                      {activity.typeOfActivity}
+                    </Link>
                   </td>
+
                   <td className="py-2 px-4 border">{activity.location}</td>
                   <td className="py-2 px-4 border">
                     {activity.reservations.map((reservation) => (

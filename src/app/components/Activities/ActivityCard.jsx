@@ -2,19 +2,14 @@ import Link from "next/link";
 import moment from "moment";
 
 const ActivityCard = ({ activity }) => {
-  /* if (!activity || !activity.creator) {
-    // Handle the case where creator is missing
-    return <p>Creator information not available</p>;
-  } */
-
   const { imageSrc, creator, typeOfActivity, location, _id, activityTimes } =
     activity;
   const { firstName } = creator;
 
   return (
     <>
-      <Link href={`/activities/${_id}`}>
-        <div className="shadow-md bg-deep-green rounded-md transition-transform transform hover:scale-105">
+      <div className="shadow-md bg-deep-green rounded-md transition-transform transform hover:scale-105">
+        <Link href={`/activities/${_id}`}>
           {imageSrc && (
             <img
               src={imageSrc}
@@ -22,7 +17,7 @@ const ActivityCard = ({ activity }) => {
               className="w-full h-40 object-cover mb-4 rounded-md cursor-pointer"
             />
           )}
-          {/* <p className="text-lg font-semibold">{firstName}</p> */}
+
           <p className="text-gray-900 font-extrabold mb-2">{typeOfActivity}</p>
           <p className="text-gray-600">Location: {location}</p>
           <div>
@@ -36,8 +31,8 @@ const ActivityCard = ({ activity }) => {
               ))}
             </ul>
           </div>
-        </div>
-      </Link>
+        </Link>
+      </div>
     </>
   );
 };

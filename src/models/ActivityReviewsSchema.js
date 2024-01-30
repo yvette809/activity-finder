@@ -1,6 +1,6 @@
 import { Schema, model, models } from "mongoose";
 
-const ActivityReviewSchema = new Schema(
+const ActivityReviewsSchema = new Schema(
   {
     rating: {
       type: Number,
@@ -14,15 +14,9 @@ const ActivityReviewSchema = new Schema(
       ref: "User",
       required: true,
     },
-   /*  activityId: {
-      type: Schema.Types.ObjectId,
-      ref: "Activity",
-      required: true,
-    }, */
-    
   },
   { timestamps: true }
 );
 
-const review = models.Review || model("Review", ActivityReviewSchema);
+const review = models.Review || model("Review", ActivityReviewsSchema);
 export default review;
