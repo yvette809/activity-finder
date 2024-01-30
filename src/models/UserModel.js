@@ -1,6 +1,5 @@
 import { Schema, model, models } from "mongoose";
 
-
 const UserSchema = new Schema(
   {
     firstName: {
@@ -20,8 +19,8 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
-    image:{
-      type:String
+    image: {
+      type: String,
     },
     role: {
       type: String,
@@ -33,8 +32,7 @@ const UserSchema = new Schema(
     },
     experience: {
       type: Number,
-    }
-   
+    },
   },
   { timestamps: true }
 );

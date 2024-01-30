@@ -10,8 +10,8 @@ export async function getActivities() {
     const response = await fetch(apiUrl, { next: { revalidate: 60 } });
 
     if (!response.ok) {
-      throw new Error("Failed to fetch activities");
       toast.error("failed to fetch activities");
+      throw new Error("Failed to fetch activities");
     }
 
     const activities = await response.json();
@@ -143,17 +143,19 @@ export const deleteActivity = async (activityId) => {
   }
 };
 
-
 // cancel reservation
 
 export const cancelReservation = async (reservationId) => {
   try {
-    const response = await fetch(`${base_url}/api/reservations/${reservationId}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `${base_url}/api/reservations/${reservationId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (response.ok) {
       toast.success("reservation sucessfully cancelled");
@@ -164,3 +166,44 @@ export const cancelReservation = async (reservationId) => {
     console.error("Error deleting activity", error);
   }
 };
+
+// get all trainers
+export async function getTrainers() {
+  const apiUrl = `${base_url}/api/trainers`;
+
+  try {
+    const response = await fetch(apiUrl, { next: { revalidate: 60 } });
+
+    if (!response.ok) {
+      toast.error("failed to fetch trainers");
+      throw new Error("Failed to fetch trainers");
+    }
+
+    const trainers = await response.json();
+
+    return trainers;
+  } catch (error) {
+    console.error("Error fetching activities:", error.message);
+    throw error;
+  }
+}
+
+// get trainer by id
+export async function getTrainer(id) {
+  const apiUrl = `${base_url}/api/trainers/${id}`;
+
+  try {
+    const response = await fetch(apiUrl);
+
+    if (!response.ok) {
+      
+      throw new Error("Failed to fetch trainer");
+    }
+
+    const trainer = await response.json();
+    return trainer;
+  } catch (error) {
+    console.error("Error fetching trainer:", error.message);
+    throw error;
+  }
+}
