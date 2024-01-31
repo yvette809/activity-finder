@@ -1,12 +1,9 @@
 import React from "react";
 import Link from "next/link";
-import { getAuthToken } from "@/utils/auth";
-import jwt from "jsonwebtoken";
+import { getUserInfoFromAuthToken } from "@/utils/userInfo";
 
 const Page = () => {
-  let authToken = getAuthToken();
-  const decodedToken = jwt.decode(authToken);
-  const userInfo = decodedToken?.userInfo || {};
+  const userInfo = getUserInfoFromAuthToken();
   console.log("userInfo", userInfo);
 
   return (

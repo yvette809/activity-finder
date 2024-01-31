@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { getAuthToken } from "@/utils/auth";
+import { getUserInfoFromAuthToken } from "@/utils/userInfo";
 import { getReservationById } from "@/utils/api";
 import ReservationList from "@/app/components/ReservationList";
 import { formatTime } from "@/utils/formatTime";
@@ -9,14 +10,11 @@ import jwt from "jsonwebtoken";
 
 const page = ({ params }) => {
   const isAuthenticated = getAuthToken();
-  const decodedToken = jwt.decode(isAuthenticated);
-  const userInfo = decodedToken?.userInfo;
+  const userInfo = getUserInfoFromAuthToken();
 
   const [reservation, setReservation] = useState(null);
 
   const formattedTime = formatTime(reservation?.createdAt);
-
-
 
   useEffect(() => {
     const fetchReservation = async () => {
@@ -29,11 +27,11 @@ const page = ({ params }) => {
       }
     };
 
-     if (isAuthenticated) {
+    if (isAuthenticated) {
       fetchReservation();
-    } 
+    }
 
-   /*  if (
+    /*  if (
       userInfo._id === reservation?.activityId?.creator ||
       userInfo._id === reservation?.userId._id
     ) {

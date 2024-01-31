@@ -14,7 +14,7 @@ const page = ({ params }) => {
     fetchTrainer();
   }, []);
   return (
-    <div className="max-w-2xl mx-auto mt-8 p-4">
+    <div className="max-w-2xl mx-auto mt-20 p-4">
       <img
         src={trainer.image}
         alt={`${trainer.firstName} ${trainer.lastName}'s pic`}

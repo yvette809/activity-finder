@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getAuthToken } from "@/utils/auth";
+import { getUserInfoFromAuthToken } from "@/utils/userInfo";
 import jwt from "jsonwebtoken";
 import DatePicker from "react-datepicker";
 import { getActivity } from "@/utils/api";
@@ -10,8 +11,7 @@ import { toast } from "react-hot-toast";
 // Component
 const EditActivityForm = ({ setShowModal, activityId, setActivity }) => {
   const isAuthenticated = getAuthToken();
-  const decodedToken = jwt.decode(isAuthenticated);
-  const userInfo = decodedToken?.userInfo || {};
+  const userInfo = getUserInfoFromAuthToken()
 
   const router = useRouter();
   const [activityData, setActivityData] = useState({

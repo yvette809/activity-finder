@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { getAuthToken } from "@/utils/auth";
+import { getUserInfoFromAuthToken } from "@/utils/userInfo";
 import ActivityForm from "../components/ActivityForm";
 import { getActivities } from "@/utils/api";
 import ActivitiesByTrainer from "../components/ActivitiesByTrainer";
@@ -11,8 +12,7 @@ import Link from "next/link";
 
 const page = () => {
   const isAuthenticated = getAuthToken();
-  const decodedToken = jwt.decode(isAuthenticated);
-  const userInfo = decodedToken?.userInfo || {};
+  const userInfo = getUserInfoFromAuthToken();
 
   const [showModal, setShowModal] = useState(false);
   const [activities, setActivities] = useState([]);

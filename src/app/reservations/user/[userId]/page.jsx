@@ -4,16 +4,15 @@ import { useEffect, useState } from "react";
 import { getUserReservations } from "@/utils/api";
 import { formatTime } from "@/utils/formatTime";
 import ReservationList from "@/app/components/ReservationList";
-import { getAuthToken } from "@/utils/auth";
+
+import { getUserInfoFromAuthToken } from "@/utils/userInfo";
 import jwt from "jsonwebtoken";
 import Link from "next/link";
 
 const Page = ({ params }) => {
   const [reservations, setReservations] = useState([]);
 
-  let authToken = getAuthToken();
-  const decodedToken = jwt.decode(authToken);
-  const userInfo = decodedToken?.userInfo || {};
+  const userInfo = getUserInfoFromAuthToken();
 
   useEffect(() => {
     const getReservations = async () => {

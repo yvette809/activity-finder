@@ -14,7 +14,7 @@ const Hero = () => {
         <h1 className="text-4xl font-bold mb-4">
           Seize the Day! Book Your Activity for Unforgettable Fun
         </h1>
-    {/*     <p className="text-lg">More text or information...</p> */}
+    
       </div>
     </div>
   );

@@ -1,17 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { getAuthToken } from "@/utils/auth";
+import { getUserInfoFromAuthToken } from "@/utils/userInfo";
 import { deleteActivity } from "@/utils/api";
-import jwt from "jsonwebtoken";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 const ActivitiesByTrainer = ({ activities }) => {
   const router = useRouter();
-  const authToken = getAuthToken();
-  const decodedToken = jwt.decode(authToken);
-  const userInfo = decodedToken?.userInfo || {};
+  const userInfo = getUserInfoFromAuthToken();
 
   let activitiesByTrainer = [];
 

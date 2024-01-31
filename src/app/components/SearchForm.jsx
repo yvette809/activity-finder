@@ -4,8 +4,6 @@ const SearchForm = ({ onSearch, activities }) => {
   const [filters, setFilters] = useState({});
   const [uniqueCreators, setUniqueCreators] = useState([]);
 
- 
-
   useEffect(() => {
     // Extract unique creator IDs from activities
     const uniqueCreatorIds = new Set(
@@ -44,11 +42,6 @@ const SearchForm = ({ onSearch, activities }) => {
                     {type}
                   </option>
                 ))}
-                {/* <option value="football">Football</option>
-              <option value="handball">Handball</option>
-              <option value="basketball">Basketball</option>
-              <option value="Rugby">Rugby</option>
-              <option value="cricket">Cricket</option> */}
               </select>
             </div>
 

@@ -327,7 +327,6 @@ const RegisterModal = ({ setShowModal, setShowRegisterModal }) => {
 export default RegisterModal;
  */
 
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -344,7 +343,6 @@ const RegisterModal = ({ setShowModal, setShowRegisterModal }) => {
     experience: 0,
   });
   const [submitting, setSubmitting] = useState(false);
-  console.log("user", user);
 
   const handleRegister = async (e) => {
     e.preventDefault();

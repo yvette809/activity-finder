@@ -7,13 +7,13 @@ import LoginModal from "./LoginModal";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { getAuthToken } from "@/utils/auth";
+import { getUserInfoFromAuthToken } from "@/utils/userInfo";
+
 import { removeAuthToken } from "@/utils/auth";
-import jwt from "jsonwebtoken";
 
 const Nav = () => {
   let authToken = getAuthToken();
-  const decodedToken = jwt.decode(authToken);
-  const userInfo = decodedToken?.userInfo || {};
+  const userInfo = getUserInfoFromAuthToken();
   const { firstName, lastName, image, role } = userInfo;
   const [showModal, setShowModal] = useState(false);
   const [loggedOut, setLoggedOut] = useState(false);
