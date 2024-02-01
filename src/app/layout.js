@@ -14,10 +14,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+       <body style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
         <ToasterProvider />
         <Navigation />
-        <div>{children}</div>
+        <div style={{ flex: 1 }}>{children}</div>
         <Footer />
       </body>
     </html>

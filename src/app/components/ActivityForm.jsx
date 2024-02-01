@@ -80,6 +80,9 @@ const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
 
   return (
     <div className="max-w-md mx-auto my-8 p-4 bg-white shadow-md rounded-md ">
+      <h1 className="font-semibold text-2xl text-center mb-3">
+        Create Activity
+      </h1>
       <form onSubmit={handleSubmit} className="w-full">
         <label className="block mb-2">
           Type of Activity:
@@ -120,6 +123,7 @@ const ActivityForm = ({ isAuthenticated, userInfo, setShowModal }) => {
             <input
               type="number"
               name="capacity"
+              min={1}
               value={activityData.capacity}
               onChange={handleChange}
               className="form_input"

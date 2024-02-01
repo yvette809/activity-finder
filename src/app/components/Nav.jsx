@@ -15,7 +15,7 @@ const Nav = () => {
   let authToken = getAuthToken();
   const userInfo = getUserInfoFromAuthToken();
   const { firstName, lastName, image, role } = userInfo;
-  const [showModal, setShowModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [loggedOut, setLoggedOut] = useState(false);
   const router = useRouter();
 
@@ -71,7 +71,7 @@ const Nav = () => {
           <ul className="flex space-x-4">
             <li
               className="cursor-pointer hover:underline"
-              onClick={() => setShowModal(true)}
+              onClick={() => setShowLoginModal(true)}
             >
               Login
             </li>
@@ -79,7 +79,7 @@ const Nav = () => {
           </ul>
         )}
 
-        {showModal && <LoginModal setShowModal={setShowModal} />}
+        {showLoginModal && <LoginModal setShowLoginModal={setShowLoginModal} />}
       </nav>
     </ClientOnly>
   );

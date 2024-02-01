@@ -103,7 +103,7 @@ const EditActivityForm = ({ setShowModal, activityId, setActivity }) => {
   };
 
   return (
-    <div className="absolute top-0 left-0 w-full h-full z-20">
+    <div className="absolute top-0 left-0 w-full  z-20">
       <div className="relative max-w-md mx-auto my-8 p-4 bg-white shadow-md rounded-md w-full h-full">
         <button
           onClick={() => setShowModal(false)}

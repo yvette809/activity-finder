@@ -116,7 +116,11 @@ const ReservationForm = ({ params }) => {
                       : "text-gray-500"
                   }`}
                 >
-                  {Math.max(0, capacity - activity?.reservations?.length)}
+                  {/* {Math.max(0, capacity - activity?.reservations?.length)} */}
+                  {Math.max(
+                    0,
+                    capacity - activity?.reservations?.length - numberOfPersons
+                  )}
                 </span>
               </div>
             </div>

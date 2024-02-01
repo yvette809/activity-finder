@@ -36,7 +36,7 @@ const page = () => {
     <ClientOnly>
       <>
         <div className="mx-20 mt-20">
-          <div className="mt-20 ">
+          <div className="font-semibold text-2xl text-center ">
             Welcome to Your dashboard {userInfo.firstName}
           </div>
           {userBookingsLink}

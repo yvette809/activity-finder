@@ -2,10 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import RegisterModal from "./RegisterModal";
-import { setAuthToken } from "@/utils/auth";
 
-const LoginModal = ({ setShowModal }) => {
+const LoginModal = ({ setShowLoginModal }) => {
   const router = useRouter();
   const [user, setUser] = useState({
     email: "",
@@ -27,12 +25,17 @@ const LoginModal = ({ setShowModal }) => {
     const data = await res.json();
     if (res.ok) {
       router.push("/dashboard");
-      setShowModal(false);
+      setShowLoginModal(false);
     }
   };
 
+  const handleRegisterClick = () => {
+    router.push("/register");
+    setShowLoginModal(false);
+  };
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className=" fixed inset-0 flex items-center justify-center bg-black bg-opacity-50  ">
       <div className="bg-white p-8 rounded-md shadow-md w-96">
         <h2 className="text-2xl font-bold mb-4 text-gray-400">Login</h2>
         <form onSubmit={handleLogin} className="text-gray-600 ">
@@ -79,7 +82,7 @@ const LoginModal = ({ setShowModal }) => {
             </button>
             <button
               className="text-white bg-deep-green p-2 rounded-md cursor-pointer"
-              onClick={() => setShowModal(false)}
+              onClick={() => setShowLoginModal(false)}
             >
               Close
             </button>
@@ -91,7 +94,7 @@ const LoginModal = ({ setShowModal }) => {
                 Don't have an account? Please{" "}
                 <strong
                   className="text-deep-green cursor-pointer flex justify-center"
-                  onClick={() => setShowRegisterModal(true)}
+                  onClick={handleRegisterClick}
                 >
                   Register
                 </strong>
@@ -101,7 +104,7 @@ const LoginModal = ({ setShowModal }) => {
         </form>
         {showRegisterModal && (
           <RegisterModal
-            setShowModal={setShowModal}
+            setShowLoginModal={setShowLoginModal}
             setShowRegisterModal={setShowRegisterModal}
           />
         )}

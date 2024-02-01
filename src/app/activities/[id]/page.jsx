@@ -46,7 +46,7 @@ const page = ({ params }) => {
     description,
     capacity,
     price,
-    status,
+    activityStatus,
     imageSrc,
     activityTimes,
     skillLevel,
@@ -118,7 +118,7 @@ const page = ({ params }) => {
                 </div>
               </div>
               <p className="text-gray-700 mb-2">Price: ${price}</p>
-              <p className="text-gray-700 mb-2">Status: {status}</p>
+              <p className="text-gray-700 mb-2">Status: {activityStatus}</p>
               <p className="text-gray-700 mb-2">
                 Skill Level: {skillLevel && skillLevel}
               </p>
