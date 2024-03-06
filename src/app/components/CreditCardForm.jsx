@@ -9,15 +9,18 @@ const CreditCardForm = ({ activityId, price, persons }) => {
   const [expirationDate, setExpirationDate] = useState("");
   const [cvv, setCVV] = useState("");
 
-  const submitForm = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("submitted");
+
     router.push(
       `/confirmation?activityId=${activityId}&price=${price}&persons=${persons}`
     );
   };
   return (
-    <form className="max-w-md mx-auto mt-8 p-8 border rounded-lg shadow-lg">
+    <form
+      className="max-w-md mx-auto mt-8 p-8 border rounded-lg shadow-lg"
+      onSubmit={handleSubmit}
+    >
       <label
         className="block mb-2 text-sm font-bold text-gray-700"
         htmlFor="cardNumber"
@@ -83,11 +86,7 @@ const CreditCardForm = ({ activityId, price, persons }) => {
         required
       />
 
-      <button
-        type="button"
-        className="outline_btn mt-3 hover:cursor-pointer"
-        onClick={submitForm}
-      >
+      <button type="submit" className="outline_btn mt-3 hover:cursor-pointer">
         Submit
       </button>
     </form>

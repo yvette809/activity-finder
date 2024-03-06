@@ -6,7 +6,7 @@ import { formatTime } from "@/utils/formatTime";
 import ReservationList from "@/app/components/ReservationList";
 
 import { getUserInfoFromAuthToken } from "@/utils/userInfo";
-import jwt from "jsonwebtoken";
+
 import Link from "next/link";
 
 const Page = ({ params }) => {
@@ -35,14 +35,9 @@ const Page = ({ params }) => {
           </Link>
         </>
       )}
+      <h1 className="text-2xl font-bold mb-4 mt-5 text-center">Your Reservations</h1>
       {reservations.map((reservation) => (
-        <>
-          <h1 className="text-2xl font-bold mb-4 mt-20">
-            Hello, {reservation?.userId.firstName}! You have made the following
-            reservation(s):
-          </h1>
-          <ReservationList reservation={reservation} user={userInfo} />
-        </>
+        <ReservationList reservation={reservation} user={userInfo} />
       ))}
     </>
   );

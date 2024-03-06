@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import ClientOnly from "./ClientOnly";
-import LoginModal from "./LoginModal";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { getAuthToken } from "@/utils/auth";
@@ -13,9 +12,9 @@ import { removeAuthToken } from "@/utils/auth";
 
 const Nav = () => {
   let authToken = getAuthToken();
+  console.log("authToken", authToken);
   const userInfo = getUserInfoFromAuthToken();
   const { firstName, lastName, image, role } = userInfo;
-  const [showLoginModal, setShowLoginModal] = useState(false);
   const [loggedOut, setLoggedOut] = useState(false);
   const router = useRouter();
 
@@ -27,15 +26,15 @@ const Nav = () => {
 
   return (
     <ClientOnly>
-      <nav className="fixed top-0 left-0 right-0 z-10 flex items-center justify-between p-4 bg-deep-green text-white shadow-lg">
+      <nav className=" flex items-center justify-between p-4 bg-deep-green text-white shadow-lg">
         <Link href="/">
           <Image src="/assets/logo.jpg" alt="logo" height="50" width="50" />
         </Link>
         {authToken ? (
           <ul className="flex space-x-4">
             <li className="flex">
+              <Image src={image} height="30" width="30" className="mr-2" />
               <span className="mr-2">{firstName}</span>
-              <Image src={image} height="30" width="30" />
             </li>
             <li
               className="cursor-pointer hover:underline"
@@ -69,11 +68,8 @@ const Nav = () => {
           </ul>
         ) : (
           <ul className="flex space-x-4">
-            <li
-              className="cursor-pointer hover:underline"
-              onClick={() => setShowLoginModal(true)}
-            >
-              Login
+            <li className="cursor-pointer hover:underline">
+              <Link href="/login"> Login</Link>
             </li>
 
             <li className="cursor-pointer hover:underline">
@@ -82,8 +78,6 @@ const Nav = () => {
             </li>
           </ul>
         )}
-
-        {showLoginModal && <LoginModal setShowLoginModal={setShowLoginModal} />}
       </nav>
     </ClientOnly>
   );

@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { getActivity } from "@/utils/api";
 import ReviewForm from "@/app/components/reviews/ReviewForm";
 import EditActivityForm from "@/app/components/EditActivityForm";
@@ -53,7 +52,6 @@ const page = ({ params }) => {
     ageGroup,
   } = activity;
   // const { firstName, lastName } = creator;
-
   // handle activity click
 
   const handleActivityBtnClick = (e) => {

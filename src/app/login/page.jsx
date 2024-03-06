@@ -2,15 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-const LoginModal = ({ setShowLoginModal }) => {
+const Login = () => {
   const router = useRouter();
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
-
-  const [showRegisterModal, setShowRegisterModal] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -24,19 +23,14 @@ const LoginModal = ({ setShowLoginModal }) => {
 
     const data = await res.json();
     if (res.ok) {
+      setUser(data);
       router.push("/dashboard");
-      setShowLoginModal(false);
     }
   };
 
-  const handleRegisterClick = () => {
-    router.push("/register");
-    setShowLoginModal(false);
-  };
-
   return (
-    <div className=" fixed inset-0 flex items-center justify-center bg-black bg-opacity-50  ">
-      <div className="bg-white p-8 rounded-md shadow-md w-96">
+    <div className="  flex items-center justify-center mt-6 ">
+      <div className="bg-white p-8 rounded-md shadow-md w-[60vw]">
         <h2 className="text-2xl font-bold mb-4 text-gray-400">Login</h2>
         <form onSubmit={handleLogin} className="text-gray-600 ">
           <div className="mb-4">
@@ -74,17 +68,8 @@ const LoginModal = ({ setShowLoginModal }) => {
           </div>
 
           <div className="flex justify-between align-between">
-            <button
-              type="submit"
-              className="bg-deep-green text-white p-2 rounded-md cursor-pointer"
-            >
+            <button type="submit" className="outline_btn">
               Login
-            </button>
-            <button
-              className="text-white bg-deep-green p-2 rounded-md cursor-pointer"
-              onClick={() => setShowLoginModal(false)}
-            >
-              Close
             </button>
           </div>
 
@@ -92,25 +77,19 @@ const LoginModal = ({ setShowLoginModal }) => {
             <div>
               <div>
                 Don't have an account? Please{" "}
-                <strong
-                  className="text-deep-green cursor-pointer flex justify-center"
-                  onClick={handleRegisterClick}
+                <Link
+                  className="text-deep-green cursor-pointer font-bold"
+                  href="/register"
                 >
                   Register
-                </strong>
+                </Link>
               </div>
             </div>
           </div>
         </form>
-        {showRegisterModal && (
-          <RegisterModal
-            setShowLoginModal={setShowLoginModal}
-            setShowRegisterModal={setShowRegisterModal}
-          />
-        )}
       </div>
     </div>
   );
 };
 
-export default LoginModal;
+export default Login;

@@ -30,7 +30,7 @@ const ReservationList = ({ reservation, user }) => {
   return (
     <div
       key={reservation._id}
-      className="mb-8 p-6 border rounded mt-20 shadow-md"
+      className="mb-8 p-2 border rounded mt-20 shadow-md mx-5"
     >
       <div className="flex items-center mb-4">
         <span className="font-bold mr-2">

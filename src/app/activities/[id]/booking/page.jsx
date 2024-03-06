@@ -73,7 +73,7 @@ const ReservationForm = ({ params }) => {
 
   return (
     <>
-      <div className="my-4 text-red-500">
+      <div className="my-4 text-red-500 ">
         {activityStatus === "full-booked" && (
           <div className="fully-booked-message bg-red-100 text-red-500 p-3 rounded-md">
             This activity is fully booked. No more reservations are allowed.
@@ -87,6 +87,7 @@ const ReservationForm = ({ params }) => {
               Number of Persons:
               <input
                 type="number"
+                max={capacity - activity?.reservations?.length}
                 value={numberOfPersons}
                 onChange={(e) => {
                   const newValue = parseInt(e.target.value, 10);
@@ -116,11 +117,8 @@ const ReservationForm = ({ params }) => {
                       : "text-gray-500"
                   }`}
                 >
-                  {/* {Math.max(0, capacity - activity?.reservations?.length)} */}
-                  {Math.max(
-                    0,
-                    capacity - activity?.reservations?.length - numberOfPersons
-                  )}
+                  {/*  {Math.max(0, capacity - activity?.reservations?.length)} */}
+                  {capacity - activity?.reservations?.length - numberOfPersons}
                 </span>
               </div>
             </div>

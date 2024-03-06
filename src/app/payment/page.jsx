@@ -31,7 +31,7 @@ const page = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 py-[2rem]">
       <div className="max-w-md p-8 bg-white shadow-md rounded-md">
         <h1 className="text-2xl font-bold mb-6">Booking Details</h1>
         <div className="mb-4">
