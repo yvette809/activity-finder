@@ -7,6 +7,7 @@ export async function getActivities() {
   const apiUrl = `${base_url}/api/activities`;
 
   try {
+    //await new Promise((resolve) => setTimeout(resolve, 3000));
     const response = await fetch(apiUrl, { next: { revalidate: 60 } });
 
     if (!response.ok) {
@@ -196,7 +197,6 @@ export async function getTrainer(id) {
     const response = await fetch(apiUrl);
 
     if (!response.ok) {
-      
       throw new Error("Failed to fetch trainer");
     }
 

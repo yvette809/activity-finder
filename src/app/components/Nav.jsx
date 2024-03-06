@@ -75,7 +75,11 @@ const Nav = () => {
             >
               Login
             </li>
-            <li className="cursor-pointer hover:underline">Activities</li>
+
+            <li className="cursor-pointer hover:underline">
+              {" "}
+              <Link href="/">Activities </Link>
+            </li>
           </ul>
         )}
 
