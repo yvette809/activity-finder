@@ -7,8 +7,9 @@ import ClientOnly from "./components/ClientOnly";
 import Hero from "./components/Hero";
 import SearchForm from "./components/SearchForm";
 import toast from "react-hot-toast";
+import { Suspense } from 'react'
 
-// Define your page component
+
 const Page = () => {
   // Define state for activities and search results
   const [activities, setActivities] = useState([]);
@@ -50,7 +51,7 @@ const Page = () => {
   return (
     <ClientOnly>
       <Hero />
-      <SearchForm onSearch={handleSearch} activities={activities} />
+      <Suspense ><SearchForm onSearch={handleSearch} activities={activities} /></Suspense>
       {searchMessage && (
         <div className="mt-4 p-4 bg-red-100 rounded-md">
           <button
