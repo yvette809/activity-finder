@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useEffect, useState } from "react";
 import Activities from "./components/Activities/Activities";
@@ -7,14 +6,17 @@ import ClientOnly from "./components/ClientOnly";
 import Hero from "./components/Hero";
 import SearchForm from "./components/SearchForm";
 import toast from "react-hot-toast";
-import { Suspense } from 'react'
-
+import { Suspense } from "react";
 
 const Page = () => {
   // Define state for activities and search results
   const [activities, setActivities] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [searchMessage, setSearchMessage] = useState("");
+
+  function SearchBarFallback() {
+    return <>placeholder</>;
+  }
 
   // Fetch activities on component mount
   useEffect(() => {
@@ -51,7 +53,9 @@ const Page = () => {
   return (
     <ClientOnly>
       <Hero />
-      <Suspense ><SearchForm onSearch={handleSearch} activities={activities} /></Suspense>
+      <Suspense fallback={<SearchBarFallback />}>
+        <SearchForm onSearch={handleSearch} activities={activities} />
+      </Suspense>
       {searchMessage && (
         <div className="mt-4 p-4 bg-red-100 rounded-md">
           <button
