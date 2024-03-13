@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
-import z from "zod";
 
 const Register = () => {
   const router = useRouter();
@@ -20,21 +19,39 @@ const Register = () => {
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
 
-  const RegisterSchema = z.object({
-    firstName: z.string().min(1),
-    lastName: z.string().min(1),
-    email: z.string().email(),
-    password: z.string().min(6),
-    image: z.string().url(),
-    role: z.enum(["user", "trainer"]),
-    specialisation: z.string().min(0).optional(),
-    experience: z.number().min(0).optional(),
-  });
+  const validateForm = () => {
+    const errors = {};
+
+    if (!user.firstName.trim()) {
+      errors.firstName = "First name is required";
+    }
+
+    if (!user.lastName.trim()) {
+      errors.lastName = "Last name is required";
+    }
+
+    if (!user.email.trim()) {
+      errors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(user.email)) {
+      errors.email = "Email is invalid";
+    }
+
+    if (!user.password.trim()) {
+      errors.password = "Password is required";
+    } else if (user.password.length < 6) {
+      errors.password = "Password must be at least 6 characters";
+    }
+
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    if (!validateForm()) {
+      return;
+    }
     setSubmitting(true);
-    const validatedData = RegisterSchema.parse(user);
 
     try {
       const res = await fetch("http://localhost:3000/api/auth/register", {
@@ -42,7 +59,7 @@ const Register = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(validatedData),
+        body: JSON.stringify(user),
       });
 
       const data = await res.json();
@@ -55,21 +72,22 @@ const Register = () => {
       toast.success("User successfully registered");
     } catch (error) {
       console.error("Error registering user:", error);
-      if (error instanceof z.ZodError) {
-        setErrors(
-          error.errors.reduce((acc, curr) => {
-            return {
-              ...acc,
-              [curr.path[0]]: curr.message,
-            };
-          }, {})
-        );
-      }
     } finally {
       setSubmitting(false);
     }
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUser((prevUser) => ({
+      ...prevUser,
+      [name]: value,
+    }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: "",
+    }));
+  };
   return (
     <div className="  flex items-center justify-center mt-6 ">
       <div className="bg-white p-8 rounded-md shadow-md w-[60vw] ">
@@ -88,10 +106,10 @@ const Register = () => {
               className="form_input"
               placeholder="Enter your first name"
               value={user.firstName}
-              onChange={(e) => setUser({ ...user, firstName: e.target.value })}
+              onChange={handleChange}
             />
             {errors.firstName && (
-              <p className="text-red-500">{errors.firstName}</p>
+              <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
             )}
           </div>
 
@@ -108,8 +126,11 @@ const Register = () => {
               className="form_input"
               placeholder="Enter your last name"
               value={user.lastName}
-              onChange={(e) => setUser({ ...user, lastName: e.target.value })}
+              onChange={handleChange}
             />
+            {errors.lastName && (
+              <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
+            )}
           </div>
 
           <div className="mb-4">
@@ -125,8 +146,11 @@ const Register = () => {
               className="form_input"
               placeholder="Enter your email"
               value={user.email}
-              onChange={(e) => setUser({ ...user, email: e.target.value })}
+              onChange={handleChange}
             />
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+            )}
           </div>
 
           <div className="mb-4">
@@ -142,8 +166,11 @@ const Register = () => {
               className="form_input"
               placeholder="Enter your password"
               value={user.password}
-              onChange={(e) => setUser({ ...user, password: e.target.value })}
+              onChange={handleChange}
             />
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+            )}
           </div>
 
           <div className="mb-4">
@@ -159,7 +186,7 @@ const Register = () => {
               className="form_input"
               placeholder="Enter your image URL"
               value={user.image}
-              onChange={(e) => setUser({ ...user, image: e.target.value })}
+              onChange={handleChange}
             />
           </div>
 
@@ -174,7 +201,7 @@ const Register = () => {
               id="role"
               className="form_input"
               value={user.role}
-              onChange={(e) => setUser({ ...user, role: e.target.value })}
+              onChange={handleChange}
             >
               <option value="">Select Role</option>
               <option value="user">User</option>
@@ -197,9 +224,7 @@ const Register = () => {
                   className="form_input"
                   placeholder="Enter your specialisation"
                   value={user.specialisation}
-                  onChange={(e) =>
-                    setUser({ ...user, specialisation: e.target.value })
-                  }
+                  onChange={handleChange}
                 />
               </div>
 
@@ -216,9 +241,7 @@ const Register = () => {
                   className="form_input"
                   placeholder="Enter your experience"
                   value={user.experience}
-                  onChange={(e) =>
-                    setUser({ ...user, experience: e.target.value })
-                  }
+                  onChange={handleChange}
                 />
               </div>
             </div>

@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 
-const Login = () => {
+const LoginModal = ({ setShowLoginModal }) => {
   const router = useRouter();
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
+
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -23,14 +24,19 @@ const Login = () => {
 
     const data = await res.json();
     if (res.ok) {
-      setUser(data);
       router.push("/dashboard");
+      setShowLoginModal(false);
     }
   };
 
+  const handleRegisterClick = () => {
+    router.push("/register");
+    setShowLoginModal(false);
+  };
+
   return (
-    <div className="  flex items-center justify-center mt-6 ">
-      <div className="bg-white p-8 rounded-md shadow-md w-[60vw]">
+    <div className=" fixed inset-0 flex items-center justify-center bg-black bg-opacity-50  ">
+      <div className="bg-white p-8 rounded-md shadow-md w-96">
         <h2 className="text-2xl font-bold mb-4 text-gray-400">Login</h2>
         <form onSubmit={handleLogin} className="text-gray-600 ">
           <div className="mb-4">
@@ -47,7 +53,6 @@ const Login = () => {
               placeholder="Enter your email"
               value={user.email}
               onChange={(e) => setUser({ ...user, email: e.target.value })}
-              required
             />
           </div>
 
@@ -65,13 +70,21 @@ const Login = () => {
               placeholder="Enter your password"
               value={user.password}
               onChange={(e) => setUser({ ...user, password: e.target.value })}
-              required
             />
           </div>
 
           <div className="flex justify-between align-between">
-            <button type="submit" className="outline_btn">
+            <button
+              type="submit"
+              className="bg-deep-green text-white p-2 rounded-md cursor-pointer"
+            >
               Login
+            </button>
+            <button
+              className="text-white bg-deep-green p-2 rounded-md cursor-pointer"
+              onClick={() => setShowLoginModal(false)}
+            >
+              Close
             </button>
           </div>
 
@@ -79,19 +92,25 @@ const Login = () => {
             <div>
               <div>
                 Don't have an account? Please{" "}
-                <Link
-                  className="text-deep-green cursor-pointer font-bold"
-                  href="/register"
+                <strong
+                  className="text-deep-green cursor-pointer flex justify-center"
+                  onClick={handleRegisterClick}
                 >
                   Register
-                </Link>
+                </strong>
               </div>
             </div>
           </div>
         </form>
+        {showRegisterModal && (
+          <RegisterModal
+            setShowLoginModal={setShowLoginModal}
+            setShowRegisterModal={setShowRegisterModal}
+          />
+        )}
       </div>
     </div>
   );
 };
 
-export default Login;
+export default LoginModal;
