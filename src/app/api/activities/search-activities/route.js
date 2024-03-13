@@ -2,7 +2,7 @@
 import ActivityModel from '@/models/ActivityModel';
 import connectToDB from '@/utils/connectDB';
 
-export async function GET(request){
+export async function GET(req){
  
   try {
     await connectToDB();
