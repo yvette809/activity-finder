@@ -1,11 +1,14 @@
- import ActivityModel from "@/models/ActivityModel";
+import ActivityModel from "@/models/ActivityModel";
 import connectToDB from "@/utils/connectDB";
 
 export async function GET(request) {
   try {
     await connectToDB();
 
-    const { searchParams } = new URL(request.url);
+    /*  const { searchParams } = new URL(request.url); */
+
+    const { searchParams } = new URL(`http://dummy${request.url}`);
+   
 
     const filteredActivities = {};
 
@@ -34,5 +37,3 @@ export async function GET(request) {
     });
   }
 }
- 
-
