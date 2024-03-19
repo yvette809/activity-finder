@@ -64,6 +64,7 @@ export default page;
 "use client";
 
 import { useState, useEffect } from "react";
+import { Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { getActivity } from "@/utils/api";
