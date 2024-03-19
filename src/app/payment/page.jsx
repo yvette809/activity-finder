@@ -56,7 +56,9 @@ const page = () => {
 export default page;
  */
 
-import { useRouter } from "next/router";
+"use client";
+
+import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/dist/client/router"; // Make sure you import from 'next/dist/client/router'
 import { useState, useEffect } from "react";
 import { getActivity } from "@/utils/api";
