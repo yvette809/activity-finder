@@ -57,7 +57,7 @@ const page = ({ params }) => {
   const handleActivityBtnClick = (e) => {
     e.preventDefault();
     if (!isAuthenticated) {
-      router.push("/");
+      router.push("/login");
     } else {
       router.push(`/activities/${_id}/booking`);
     }

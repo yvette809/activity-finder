@@ -103,6 +103,7 @@ const Register = () => {
             <input
               type="text"
               id="firstName"
+              name="firstName"
               className="form_input"
               placeholder="Enter your first name"
               value={user.firstName}
@@ -123,6 +124,7 @@ const Register = () => {
             <input
               type="text"
               id="lastName"
+              name="lastName"
               className="form_input"
               placeholder="Enter your last name"
               value={user.lastName}
@@ -143,6 +145,7 @@ const Register = () => {
             <input
               type="text"
               id="email"
+              name="email"
               className="form_input"
               placeholder="Enter your email"
               value={user.email}
@@ -163,6 +166,7 @@ const Register = () => {
             <input
               type="password"
               id="password"
+              name="password"
               className="form_input"
               placeholder="Enter your password"
               value={user.password}
@@ -183,6 +187,7 @@ const Register = () => {
             <input
               type="text"
               id="image"
+              name="image"
               className="form_input"
               placeholder="Enter your image URL"
               value={user.image}
@@ -199,6 +204,7 @@ const Register = () => {
             </label>
             <select
               id="role"
+              name="role"
               className="form_input"
               value={user.role}
               onChange={handleChange}
@@ -221,6 +227,7 @@ const Register = () => {
                 <input
                   type="text"
                   id="specialisation"
+                  name="specialisation"
                   className="form_input"
                   placeholder="Enter your specialisation"
                   value={user.specialisation}
@@ -238,6 +245,7 @@ const Register = () => {
                 <input
                   type="number"
                   id="experience"
+                  name="experience"
                   className="form_input"
                   placeholder="Enter your experience"
                   value={user.experience}
