@@ -10,7 +10,7 @@ import { getUserInfoFromAuthToken } from "@/utils/userInfo";
 
 import { removeAuthToken } from "@/utils/auth";
 
-const Nav = () => {
+const Navigation = () => {
   let authToken = getAuthToken();
   console.log("authToken", authToken);
   const userInfo = getUserInfoFromAuthToken();
@@ -83,4 +83,4 @@ const Nav = () => {
   );
 };
 
-export default Nav;
+export default Navigation;
