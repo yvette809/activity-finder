@@ -1,6 +1,6 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Navigation from "./components/Nav";
+import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 import ToasterProvider from "@/ToastProvider";
 
@@ -14,7 +14,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-       <body style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      <body
+        style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
+      >
         <ToasterProvider />
         <Navigation />
         <div style={{ flex: 1 }}>{children}</div>
