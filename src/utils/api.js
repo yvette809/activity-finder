@@ -1,6 +1,7 @@
 import { toast } from "react-hot-toast";
 
-const base_url = "http://localhost:3000";
+/* const base_url = "http://localhost:3000"; */
+const base_url = "https://activity-finder-nyjc.vercel.app"
 
 // get all activities
 export async function getActivities() {
