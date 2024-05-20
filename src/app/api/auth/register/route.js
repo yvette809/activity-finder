@@ -2,10 +2,14 @@ import connectToDB from "@/utils/connectDB";
 import { genSalt, hash } from "bcryptjs";
 import UserModel from "@/models/UserModel";
 import generateToken from "@/utils/token";
+import { setCorsHeaders } from "@/utils/cors";
 
 export async function POST(request) {
+  const response = new Response();
+
   try {
     connectToDB();
+    setCorsHeaders(response)
 
     const {
       firstName,
