@@ -12,7 +12,7 @@ import { removeAuthToken } from "@/utils/auth";
 
 const Navigation = () => {
   let authToken = getAuthToken();
-  console.log("authToken", authToken);
+ 
   const userInfo = getUserInfoFromAuthToken();
   const { firstName, lastName, image, role } = userInfo;
   const [loggedOut, setLoggedOut] = useState(false);
