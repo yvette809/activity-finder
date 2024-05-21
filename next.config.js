@@ -6,7 +6,7 @@ const nextConfig = {
   images: {
     domains: ["avatar.iran.liara.run"],
   },
-  /* async headers() {
+  async headers() {
     return [
       {
         // matching all API routes
@@ -19,7 +19,7 @@ const nextConfig = {
         ]
       }
     ]
-  } */
+  }
 };
 
 module.exports = nextConfig;
