@@ -34,7 +34,7 @@ const Navigation = () => {
           <ul className="flex space-x-4">
             <li className="flex">
               <Image src={image} height="30" width="30" className="mr-2" />
-              <span className="mr-2">{firstName}</span>
+              <span className="mr-2">{firstName.charAt(0).toUpperCase() + firstName.slice(1)}</span>
             </li>
             <li
               className="cursor-pointer hover:underline"
