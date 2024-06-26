@@ -4,7 +4,7 @@ const base_url = "http://localhost:3000";
 
 // get all activities
 export async function getActivities() {
-  const apiUrl = `${base_url}/api/activities`;
+  const apiUrl = `api/activities`;
 
   try {
     //await new Promise((resolve) => setTimeout(resolve, 3000));
