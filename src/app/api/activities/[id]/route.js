@@ -1,7 +1,7 @@
 import ActivityModel from "@/models/ActivityModel";
 import UserModel from "@/models/UserModel";
-import { getSession } from "@/utils/session";
-import connectToDB from "@/utils/connectDB";
+import { getSession } from "@/lib/session";
+import connectToDB from "@/lib/connectDB";
 
 // get activity by id
 export const GET = async (request, { params }) => {

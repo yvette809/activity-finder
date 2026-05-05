@@ -1,6 +1,6 @@
-import { getSession } from "@/utils/session";
+import { getSession } from "@/lib/session";
 import ReservationModel from "@/models/reservationModel";
-import connectToDB from "@/utils/connectDB";
+import connectToDB from "@/lib/connectDB";
 
 // reservation for loggedin user
 /* export const GET = async () => {

@@ -1,8 +1,8 @@
 import ActivityModel from "@/models/ActivityModel";
 import ReservationModel from "@/models/reservationModel";
 import UserModel from "@/models/UserModel";
-import { getSession } from "@/utils/session";
-import connectToDB from "@/utils/connectDB";
+import { getSession } from "@/lib/session";
+import connectToDB from "@/lib/connectDB";
 
 //get all reservations
 

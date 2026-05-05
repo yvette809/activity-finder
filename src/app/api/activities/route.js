@@ -1,7 +1,7 @@
-import { getSession } from "@/utils/session";
+import { getSession } from "@/lib/session";
 import ActivityModel from "@/models/ActivityModel";
 import UserModel from "@/models/UserModel";
-import connectToDB from "@/utils/connectDB";
+import connectToDB from "@/lib/connectDB";
 
 export const POST = async (request) => {
   try {

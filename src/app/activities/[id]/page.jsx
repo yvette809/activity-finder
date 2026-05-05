@@ -1,41 +1,67 @@
 "use client";
-import { useState, useEffect } from "react";
-import { getActivity } from "@/utils/api";
-import ReviewForm from "@/app/components/reviews/ReviewForm";
-import EditActivityForm from "@/app/components/EditActivityForm";
-import StarRating from "@/app/components/reviews/StarRating";
-import { useRouter } from "next/navigation";
-import { getAuthToken } from "@/utils/auth";
-import { formatDuration } from "@/utils/formatTime";
-import jwt from "jsonwebtoken";
 
-const page = ({ params }) => {
-  const [activity, setActivity] = useState({});
-  const [showModal, setShowModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const isAuthenticated = getAuthToken();
-  const decodedToken = jwt.decode(isAuthenticated);
-  const userInfo = decodedToken?.userInfo || {};
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import moment from "moment";
+import toast from "react-hot-toast";
+import { getActivity } from "@/lib/api";
+import { getAuthToken } from "@/lib/auth";
+import { getUserInfoFromAuthToken } from "@/lib/userInfo";
+import { formatDuration } from "@/lib/formatTime";
+import { Spinner } from "@/components/ui/Loading";
+import StarRating from "@/components/StarRating";
+
+export default function ActivityDetailPage({ params }) {
   const router = useRouter();
   const { id } = params;
+  const [activity, setActivity] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  console.log("activity", activity);
+  const isAuthenticated = getAuthToken();
+  const userInfo = getUserInfoFromAuthToken();
 
-  // fetch activity
   useEffect(() => {
-    const fetchActivity = async () => {
+    const fetch = async () => {
       try {
-        const fetchedActivity = await getActivity(id);
-        setActivity(fetchedActivity);
-      } catch (error) {
-        console.error("Error fetching activity:", error.message);
+        const data = await getActivity(id);
+        setActivity(data);
+      } catch (err) {
+        console.error(err);
+        toast.error("Could not load activity.");
+      } finally {
+        setLoading(false);
       }
     };
-
-    if (id) {
-      fetchActivity();
-    }
+    if (id) fetch();
   }, [id]);
+
+  const handleBookClick = () => {
+    if (!isAuthenticated) {
+      router.push("/login");
+      return;
+    }
+    router.push(`/activities/${id}/booking`);
+  };
+
+  if (loading) {
+    return (
+      <div className="pt-24 min-h-screen flex items-center justify-center">
+        <Spinner className="!w-10 !h-10 text-forest-700" />
+      </div>
+    );
+  }
+
+  if (!activity) {
+    return (
+      <div className="pt-24 container-page py-20 text-center">
+        <h1 className="font-display text-2xl text-ink-900">Activity not found</h1>
+        <p className="text-ink-500 mt-2">It may have been removed or never existed.</p>
+        <button onClick={() => router.push("/")} className="btn-primary mt-6">
+          Back to activities
+        </button>
+      </div>
+    );
+  }
 
   const {
     _id,
@@ -47,188 +73,203 @@ const page = ({ params }) => {
     price,
     activityStatus,
     imageSrc,
-    activityTimes,
+    activityTimes = [],
     skillLevel,
     ageGroup,
+    reservations = [],
+    reviews = [],
   } = activity;
-  // const { firstName, lastName } = creator;
-  // handle activity click
 
-  const handleActivityBtnClick = (e) => {
-    e.preventDefault();
-    if (!isAuthenticated) {
-      router.push("/login");
-    } else {
-      router.push(`/activities/${_id}/booking`);
-    }
-  };
+  const reserved = reservations?.length || 0;
+  const spotsLeft = Math.max(0, (capacity || 0) - reserved);
+  const isFull = activityStatus === "full-booked" || spotsLeft === 0;
+  const isOwner =
+    isAuthenticated && userInfo?.role === "trainer" && creator?._id === userInfo?._id;
+
+  const avgRating =
+    reviews.length > 0
+      ? reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / reviews.length
+      : 0;
 
   return (
-    <>
-      <div className="container mx-auto p-8 z-5 relative">
-        <div className="bg-white p-8 rounded-md shadow-md">
-          {imageSrc && (
-            <img
-              src={imageSrc}
-              alt={`Image for ${
-                creator?.firstName && creator.firstName
-              }'s activity`}
-              className="w-full h-64 object-cover mb-6 rounded-md shadow-lg"
-            />
-          )}
-          <h1 className="text-4xl font-bold mb-4">
-            {typeOfActivity} with {creator?.firstName} {creator?.lastName}
-          </h1>
-          <div className="flex flex-wrap justify-between">
-            <div className="w-full md:w-2/3 pr-4">
-              <p className="text-lg font-semibold mb-2">Location: {location}</p>
-              <p className="text-gray-700 mb-2">Description: {description}</p>
-              <p className="text-gray-700 mb-2">Capacity: {capacity} people</p>
-              <div
-                className={`text-gray-700 mb-2 ${
-                  capacity - activity?.reservations?.length < 5
-                    ? "text-red-500"
-                    : "text-gray-500"
-                }`}
-              >
-                <div className="spaces">
-                  {activity.activityStatus === "full-booked" ? (
-                    <span className="text-red-500">
-                      Not Available! Full-booked
-                    </span>
-                  ) : (
-                    <>
-                      <span className="mr-1">Spaces left:</span>
-                      <span
-                        className={`${
-                          capacity - activity?.reservations?.length < 5
-                            ? "text-red-500"
-                            : "text-gray-500"
-                        }`}
-                      >
-                        {/* {Math.max(0, capacity - activity?.reservations?.length)} */}
-                        {String(
-                          Math.max(0, capacity - activity?.reservations?.length)
-                        )}
-                      </span>
-                    </>
-                  )}
-                </div>
-              </div>
-              <p className="text-gray-700 mb-2">Price: ${price}</p>
-              <p className="text-gray-700 mb-2">Status: {activityStatus}</p>
-              <p className="text-gray-700 mb-2">
-                Skill Level: {skillLevel && skillLevel}
-              </p>
-              <p className="text-gray-700 mb-2">
-                Age Group: {ageGroup && ageGroup}
-              </p>
-
-              <div>
-                {activityTimes &&
-                  activityTimes.map((timeSlot, index) => (
-                    <div key={index} className="time-slot mb-4">
-                      <p className="text-gray-700">
-                        Date:{" "}
-                        {new Date(timeSlot.startTime).toLocaleDateString()}
-                      </p>
-                      <p className="text-gray-700">
-                        Start Time:{" "}
-                        {new Date(timeSlot.startTime).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </p>
-                      <p className="text-gray-700">
-                        End Time:{" "}
-                        {new Date(timeSlot.endTime).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </p>
-                      <p className="text-gray-700">
-                        Duration:{" "}
-                        {formatDuration(timeSlot.startTime, timeSlot.endTime)}
-                      </p>
-                    </div>
-                  ))}
-              </div>
+    <div className="pt-24 pb-16">
+      {/* Hero image */}
+      {imageSrc && (
+        <div className="relative h-[40vh] sm:h-[50vh] overflow-hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={imageSrc} alt={typeOfActivity} className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 container-page pb-8">
+            <div className="flex flex-wrap gap-2 mb-3">
+              <span className="tag-forest !bg-forest-100/90 backdrop-blur-sm">
+                {typeOfActivity}
+              </span>
+              {skillLevel && <span className="tag !bg-white/90 backdrop-blur-sm">{skillLevel}</span>}
+              {ageGroup && <span className="tag !bg-white/90 backdrop-blur-sm">{ageGroup}</span>}
             </div>
-
-            <div className="w-full md:w-1/3 mt-6 md:mt-0">
-              <button
-                disabled={activity.activityStatus === "full-booked"}
-                className={`outline_btn mb-4 md:mb-6 ${
-                  activity.activityStatus === "full-booked"
-                    ? "opacity-50 cursor-not-allowed"
-                    : ""
-                }`}
-                onClick={handleActivityBtnClick}
-              >
-                Book Activity
-              </button>
-
-              {showEditModal && (
-                <EditActivityForm
-                  setShowModal={setShowEditModal}
-                  activityId={activity._id}
-                />
-              )}
-              {isAuthenticated &&
-                userInfo?.role === "trainer" &&
-                creator?._id === userInfo?._id && (
-                  <button
-                    className="green_btn"
-                    onClick={() => setShowEditModal(true)}
-                    setActivity={setActivity}
-                  >
-                    Edit Activity
-                  </button>
-                )}
-            </div>
+            <h1 className="font-display text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+              {typeOfActivity}
+            </h1>
+            {creator?.firstName && (
+              <p className="text-white/90 mt-2 text-lg">
+                with{" "}
+                <span className="font-semibold">
+                  {creator.firstName} {creator.lastName}
+                </span>
+              </p>
+            )}
           </div>
         </div>
-      </div>
-      <div className="reviews mt-8 flex justify-center">
-        {activity?.reviews?.length <= 0 && (
-          <p className="text-gray-700">
-            There are no reviews for this activity
-          </p>
-        )}
-        {activity?.reviews?.map((review) => (
-          <div key={review._id} className="border p-4 mb-4">
-            <h2 className="text-center text-2xl  font-bolder">Reviews</h2>
-            <p className="font-semibold text-lg mb-2">
-              {review.userId.firstName} {review.userId.lastName}
-            </p>
-            <img
-              src={review.userId.image}
-              alt="user review"
-              className="w-12 h-12 rounded-full mb-2"
-            />
-            <div className="w-full md:w-2/3 pr-4">
-              <p className="mb-2">Rating: {review?.rating}</p>
-              <StarRating rating={review?.rating || 0} />
-            </div>
-            <p>{review.comment}</p>
-          </div>
-        ))}
-      </div>
-      {/* Activity reviews will go in here */}
-      {showModal && (
-        <ReviewForm
-          activityId={activity._id}
-          user={userInfo}
-          setShowModal={setShowModal}
-        />
       )}
-      <div className="p-20 flex justify-center">
-        <button onClick={() => setShowModal(true)} className="outline_btn">
-          Add Review
-        </button>
-      </div>
-    </>
-  );
-};
 
-export default page;
+      <div className="container-page mt-8">
+        <div className="grid lg:grid-cols-[1fr_360px] gap-10">
+          {/* Main column */}
+          <div className="space-y-8">
+            {/* Quick info row */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <InfoTile label="Location" value={location} />
+              <InfoTile label="Spots left" value={isFull ? "Full" : `${spotsLeft} / ${capacity}`} highlight={isFull ? "danger" : spotsLeft <= 3 ? "warning" : null} />
+              <InfoTile label="Price" value={`$${price}`} />
+              <InfoTile label="Rating" value={avgRating ? avgRating.toFixed(1) : "—"} />
+            </div>
+
+            {description && (
+              <section>
+                <h2 className="font-display text-xl font-bold text-ink-900 mb-3">
+                  About this activity
+                </h2>
+                <p className="text-ink-600 leading-relaxed whitespace-pre-line">
+                  {description}
+                </p>
+              </section>
+            )}
+
+            {activityTimes.length > 0 && (
+              <section>
+                <h2 className="font-display text-xl font-bold text-ink-900 mb-4">
+                  Available sessions
+                </h2>
+                <div className="space-y-3">
+                  {activityTimes.map((slot, idx) => (
+                    <div
+                      key={slot._id || idx}
+                      className="flex items-center justify-between p-4 rounded-xl border border-ink-100 hover:border-forest-300 hover:bg-forest-50/30 transition-colors"
+                    >
+                      <div>
+                        <div className="font-semibold text-ink-900">
+                          {moment(slot.startTime).format("dddd, MMMM Do")}
+                        </div>
+                        <div className="text-sm text-ink-500 mt-0.5">
+                          {moment(slot.startTime).format("h:mm A")} –{" "}
+                          {moment(slot.endTime).format("h:mm A")}
+                        </div>
+                      </div>
+                      <div className="text-xs text-ink-500 font-mono">
+                        {formatDuration(slot.startTime, slot.endTime)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Reviews */}
+            <section>
+              <h2 className="font-display text-xl font-bold text-ink-900 mb-4">
+                Reviews ({reviews.length})
+              </h2>
+              {reviews.length === 0 ? (
+                <p className="text-ink-500">No reviews yet — be the first.</p>
+              ) : (
+                <div className="space-y-4">
+                  {reviews.map((review) => (
+                    <div key={review._id} className="p-5 rounded-xl border border-ink-100">
+                      <div className="flex items-center gap-3 mb-3">
+                        {review.userId?.image && (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={review.userId.image}
+                            alt=""
+                            className="w-10 h-10 rounded-full object-cover"
+                          />
+                        )}
+                        <div>
+                          <div className="font-semibold text-ink-900">
+                            {review.userId?.firstName} {review.userId?.lastName}
+                          </div>
+                          <StarRating rating={review.rating || 0} />
+                        </div>
+                      </div>
+                      <p className="text-ink-600 leading-relaxed">{review.comment}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+          </div>
+
+          {/* Booking sidebar */}
+          <aside className="lg:sticky lg:top-28 h-fit">
+            <div className="card p-6 space-y-4">
+              <div className="flex items-baseline justify-between">
+                <span className="font-display font-bold text-3xl text-ink-900">
+                  ${price}
+                </span>
+                <span className="text-sm text-ink-500">per person</span>
+              </div>
+
+              {isFull ? (
+                <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700 font-medium">
+                  This activity is fully booked.
+                </div>
+              ) : spotsLeft <= 3 ? (
+                <div className="p-3 rounded-xl bg-sun-50 border border-sun-200 text-sm text-sun-800 font-medium">
+                  Only {spotsLeft} spot{spotsLeft === 1 ? "" : "s"} left!
+                </div>
+              ) : null}
+
+              <button
+                onClick={handleBookClick}
+                disabled={isFull}
+                className="btn-primary w-full !py-4"
+              >
+                {isFull ? "Fully booked" : "Book this activity"}
+              </button>
+
+              {isOwner && (
+                <button
+                  onClick={() => router.push(`/dashboard`)}
+                  className="btn-secondary w-full"
+                >
+                  Manage activity
+                </button>
+              )}
+
+              <div className="text-xs text-ink-500 text-center pt-2">
+                Free cancellation up to 24h before
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function InfoTile({ label, value, highlight }) {
+  const colorClass =
+    highlight === "danger"
+      ? "text-red-700"
+      : highlight === "warning"
+      ? "text-sun-700"
+      : "text-ink-900";
+  return (
+    <div className="p-3 rounded-xl bg-ink-50">
+      <div className="text-xs uppercase tracking-wider text-ink-500 mb-1">
+        {label}
+      </div>
+      <div className={`font-semibold ${colorClass}`}>{value || "—"}</div>
+    </div>
+  );
+}

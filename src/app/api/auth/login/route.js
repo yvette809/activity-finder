@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
-import connectToDB from "@/utils/connectDB";
+import connectToDB from "@/lib/connectDB";
 import UserModel from "@/models/UserModel";
-import generateToken from "@/utils/token";
+import generateToken from "@/lib/token";
 
 //login a user
 export async function POST(request, response) {

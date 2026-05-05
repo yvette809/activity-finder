@@ -1,6 +1,6 @@
-import { getSession } from "@/utils/session";
+import { getSession } from "@/lib/session";
 import UserModel from "@/models/UserModel";
-import connectToDB from "@/utils/connectDB";
+import connectToDB from "@/lib/connectDB";
 
 export const GET = async (request) => {
   try {

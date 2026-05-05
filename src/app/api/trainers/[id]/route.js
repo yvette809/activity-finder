@@ -1,5 +1,5 @@
 import UserModel from "@/models/UserModel";
-import connectToDB from "@/utils/connectDB";
+import connectToDB from "@/lib/connectDB";
 
 export const GET = async (request, { params }) => {
   try {

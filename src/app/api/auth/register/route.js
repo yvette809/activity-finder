@@ -1,7 +1,7 @@
-import connectToDB from "@/utils/connectDB";
+import connectToDB from "@/lib/connectDB";
 import { genSalt, hash } from "bcryptjs";
 import UserModel from "@/models/UserModel";
-import generateToken from "@/utils/token";
+import generateToken from "@/lib/token";
 
 
 export async function POST(request) {

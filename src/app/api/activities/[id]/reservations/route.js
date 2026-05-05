@@ -1,5 +1,5 @@
-import connectToDB from "@/utils/connectDB";
-import { getSession } from "@/utils/session";
+import connectToDB from "@/lib/connectDB";
+import { getSession } from "@/lib/session";
 import ActivityModel from "@/models/ActivityModel";
 import ReservationModel from "@/models/reservationModel";
 

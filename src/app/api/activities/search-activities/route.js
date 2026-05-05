@@ -1,6 +1,6 @@
 
 import ActivityModel from '@/models/ActivityModel';
-import connectToDB from '@/utils/connectDB';
+import connectToDB from '@/lib/connectDB';
 
 export async function GET(req){
  
